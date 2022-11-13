@@ -5,10 +5,9 @@ using namespace std;
 
 
 
-///// to do add notify and stringToLog when part 5 is set up
-///// to do double check calling parent (check all copy constructors)
-///// to do finish testing and cleaning
-///// to do github
+///// add notify and stringToLog when part 5 is set up
+///// finish testing and cleaning
+///// ctrl setnoofarmies a: changed to pointers
 
 
 
@@ -258,7 +257,7 @@ void Deploy::execute() {
 //    update player's reinforcements using the setter method
     this->player->setReinforcements(this->unitsAtStart - this->unitsToSend);
 //    update target territory's number of armies
-    this->targetTerritory->setNoOfArmies(this->targetTerritory->getNoOfArmies() + *this->unitsToSend);
+    this->targetTerritory->setNoOfArmies(new int(this->targetTerritory->getNoOfArmies() + *this->unitsToSend));
 //    calling setter to set orderEffect
     string effect = to_string(*this->unitsToSend) + " troops are deployed to " + *this->targetName + ". There are now " +
                     to_string(this->targetTerritory->getNoOfArmies()) + " armies.";
@@ -432,18 +431,18 @@ void Advance::execute() {
     }
 //    if player owns both targetTerritory and sourceTerritory, add unitsToSend to targetTerritory
     if(this->player->getName()->compare(*this->targetTerritory->getPlayer()->getName()) == 0) {
-        this->targetTerritory->setNoOfArmies(this->targetTerritory->getNoOfArmies() + *this->unitsToSend);
+        this->targetTerritory->setNoOfArmies(new int(this->targetTerritory->getNoOfArmies() + *this->unitsToSend));
     }
 //    else, update number of armies in targetTerritory and sourceTerritory
     else {
         int sourceArmies = this->sourceTerritory->getNoOfArmies();
         int targetArmies = this->targetTerritory->getNoOfArmies();
-        this->targetTerritory->setNoOfArmies(this->targetTerritory->getNoOfArmies() - (sourceArmies * 0.6));
-        this->sourceTerritory->setNoOfArmies(this->sourceTerritory->getNoOfArmies() - (targetArmies * 0.7));
+        this->targetTerritory->setNoOfArmies(new int(this->targetTerritory->getNoOfArmies() - (sourceArmies * 0.6)));
+        this->sourceTerritory->setNoOfArmies(new int(this->sourceTerritory->getNoOfArmies() - (targetArmies * 0.7)));
     }
 //    if there are no more enemy armies in targetTerritory, update its number of armies, its player, and the player's territories
     if(this->targetTerritory->getNoOfArmies() <= 0) {
-        this->targetTerritory->setNoOfArmies(this->sourceTerritory->getNoOfArmies());
+        this->targetTerritory->setNoOfArmies(new int(this->sourceTerritory->getNoOfArmies()));
         this->targetTerritory->setPlayer(this->player);
         vector<Territory*> oldOwnerTerritories = this->targetTerritory->getPlayer()->getTerritories();
         for(int i = 0; i < oldOwnerTerritories.size(); i++) {
@@ -588,7 +587,7 @@ void Bomb::execute() {
         return;
     }
 //    update targetTerritory's number of armies using the getter and setter methods
-    this->targetTerritory->setNoOfArmies(this->targetTerritory->getNoOfArmies() / 2);
+    this->targetTerritory->setNoOfArmies(new int(this->targetTerritory->getNoOfArmies() / 2));
 //    calling setter to set orderEffect
     string effect = *this->targetName + " was bombed. There remains " + to_string(this->targetTerritory->getNoOfArmies()) + " armies.";
     this->setOrderEffect(new string(effect));
@@ -677,7 +676,7 @@ void Blockade::execute() {
         return;
     }
 //    update targetTerritory's number of armies using the getter and setter methods
-    this->targetTerritory->setNoOfArmies(this->targetTerritory->getNoOfArmies() * 2);
+    this->targetTerritory->setNoOfArmies(new int(this->targetTerritory->getNoOfArmies() * 2));
 //    update targetTerritory's player using the setter method
     this->targetTerritory->setPlayer(playerN);
 
@@ -846,7 +845,7 @@ void Airlift::execute() {
         return;
     }
 //    update targetTerritory's number of armies using the getter and setter methods
-    this->targetTerritory->setNoOfArmies(this->targetTerritory->getNoOfArmies() + *this->unitsToSend);
+    this->targetTerritory->setNoOfArmies(new int(this->targetTerritory->getNoOfArmies() + *this->unitsToSend));
 //    calling setter to set orderEffect
     string effect = to_string(*this->unitsToSend) + " armies were airlifted to " + *this->targetName + ". There are now " +
                     to_string(this->targetTerritory->getNoOfArmies()) + " armies.";

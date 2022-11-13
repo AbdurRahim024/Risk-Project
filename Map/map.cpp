@@ -106,8 +106,8 @@ void Territory::setTerritoryName(string territoryName){
 void Territory::setContinent(Continent *continent){
     this->continent = continent;
 };
-void Territory::setNoOfArmies(int noOfArmies){
-    *this->noOfArmies = noOfArmies;
+void Territory::setNoOfArmies(int* noOfArmies){     //a: changed to pointer
+    this->noOfArmies = noOfArmies;
 };
 void Territory::setPlayer(Player* playerName){
     this->player = playerName;
