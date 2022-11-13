@@ -517,6 +517,8 @@ void GameEngine::reinforcementPhase(vector<Player*> listOfPlayers,Map* map){
     }
 }
 
+
+// This method created orders using the issue order method and pushes the orders into the orders list
 OrdersLists* GameEngine::issueOrdersPhase(vector<Player*> listOfPlayers,Map* map) {
     OrdersLists* list = new OrdersLists();
     //print out all the options

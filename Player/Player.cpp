@@ -146,8 +146,22 @@ void Player::setReinforcements(int noOfReinforcements) {
 }
 
 
+void Player::setNegotiations(vector<Player *> negotiations) {       // amanda part 4
+    this->negotiations = negotiations;
+};
+
+void Player::setReceivedCard(bool* receivedCard) {       // amanda part 4
+    this->receivedCard = receivedCard;
+};
+
+
 // OTHER
 
+void Player::addTerritory(Territory* newTerr) {
+    this->territories.push_back(newTerr);
+}
+
+// The toAttack method returns the list of territories that can be attacked by the user
 vector<Territory*> Player::toAttack(Territory* source) {
     vector<Territory*> attTerritories;
     for (int i = 0; i < source->getAdjacentTerritories().size(); ++i) {
@@ -158,6 +172,8 @@ vector<Territory*> Player::toAttack(Territory* source) {
     return attTerritories;
 }
 
+
+// The toDefend method returns the list of territories that can be defended by the user
 vector<Territory*> Player::toDefend(Territory* source) {
     vector<Territory*> defTerritories;
     for (int i = 0; i < source->getAdjacentTerritories().size(); ++i) {
@@ -168,6 +184,8 @@ vector<Territory*> Player::toDefend(Territory* source) {
     return defTerritories;
 }
 
+
+// The issue order method creates and returns an order with the help of toAttack and to Defend methods
 Order* Player::issueOrder(int orderNumber, Map* map) {
     Order *order = nullptr;
     if(orderNumber!=0 && *this->getReinforcements()!=0){
@@ -179,6 +197,9 @@ Order* Player::issueOrder(int orderNumber, Map* map) {
     for(int i = 0; i<this->territories.size();i++){
         ownTerritories.push_back(this->territories[i]);
     }
+
+
+    //Creation of the Deploy order
     switch(orderNumber) {
         case 0: {
             //deploy order
@@ -194,6 +215,8 @@ Order* Player::issueOrder(int orderNumber, Map* map) {
             order = new Deploy(new int(armiesToPlace),new string(ownTerritories[0]->getTerritoryName()), this);
             break;
         }
+
+        //Creation of the Advance order
         case 1: {
             //advance order - to atk
             cout << "\n\n---------------- YOU CHOSE TO ADVANCE TO A TERRITORY ---------------------" << endl;
@@ -238,6 +261,8 @@ Order* Player::issueOrder(int orderNumber, Map* map) {
             order = new Advance(armiesToSend,new string(toDef[0]->getTerritoryName()), new string(ownTerritories[0]->getTerritoryName()), this);
             break;
         }
+
+        //Creation of the Bomb order
         case 3:{
             cout << "\n\n---------------- YOU CHOSE TO BOMB A TERRITORY ---------------------" << endl;
             cout << "\nSelect a territory you would like to Bomb: " << endl;
@@ -256,6 +281,7 @@ Order* Player::issueOrder(int orderNumber, Map* map) {
             break;
         }
     }
+    //Returning the order that was created
     return order;
 }
 
