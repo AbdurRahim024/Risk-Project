@@ -49,10 +49,10 @@ void testOrdersLists() {
     Territory* QC = new Territory(new string("Quebec"));
     Territory* ON = new Territory(new string("Ontario"));
     Territory* MB = new Territory(new string("Manitoba"));
-    NL->setNoOfArmies(4);
-    QC->setNoOfArmies(3);
-    ON->setNoOfArmies(2);
-    MB->setNoOfArmies(1);
+    NL->setNoOfArmies(new int(4));      //a: changed to pointers
+    QC->setNoOfArmies(new int(3));
+    ON->setNoOfArmies(new int(2));
+    MB->setNoOfArmies(new int(1));
 
 //    set adjacent territories for each territory
     NL->setAdjacentTerritories(QC);
