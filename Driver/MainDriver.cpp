@@ -50,5 +50,6 @@
 //}
 int main(){
     testMainGameLoop();
+    testGameStates();
     return 0;
 }

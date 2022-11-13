@@ -1,6 +1,6 @@
 #include "GameEngine.h"
 #include <vector>
-#include <string.h>
+
 //
 // Created by Emma on 2022-10-06.
 //
@@ -96,7 +96,7 @@ void GameEngine::gameFlow(string userInput) {
         int advance = moveInt - *state;
         int nextState = *state + advance;
 
-        // edge cases: these special values handles the loop transitions
+        // edge cases: these special values handle the loop transitions
         if (nextState == 10000) {
             *state = 6;
         } else if (nextState == 1000) {
@@ -124,7 +124,6 @@ bool GameEngine::validateMove(int move) {
     return false;
 }
 
-
 int GameEngine::userInputToInt(string userInput) {
     // convert the user input from string to int
     if (userInput == "loadmap") {
@@ -133,7 +132,7 @@ int GameEngine::userInputToInt(string userInput) {
         return 2;
     } else if (userInput == "addplayer") {
         return 3;
-    } else if (userInput == "assigncountries") {
+    } else if (userInput == "gamestart") {
         return 4;
     } else if (userInput == "issueorder") {
         return 5;
@@ -145,14 +144,317 @@ int GameEngine::userInputToInt(string userInput) {
         return 1000; //edge case
     } else if (userInput == "win") {
         return 7;
-    } else if (userInput == "play") {
+    } else if (userInput == "replay") {
         return 100; //edge case
-    } else if (userInput == "end") {
+    } else if (userInput == "quit") {
         return 8;
     } else {
         return -1;
     }
 }
+
+// START UP PHASE
+void GameEngine::startupPhase() {
+    cout << "Startup phase" << endl << endl;
+    cout << *this << endl;
+
+    cout << "'-console' to read from console" << endl;
+    cout << "'-file <filename>' to read from file" << endl;
+
+    string choice;
+    cout << "Enter your choice: " << endl;
+    getline(cin, choice);
+
+    // reading from the console
+    if (choice == "-console") {
+        CommandProcessor* cp = new CommandProcessor();
+
+        //while state isn't in assign reinforcement (first step of play phase)
+        while (*state != 4) {
+            Command* command = cp->getCommand();
+            string* effect = execute(command->getCommandString());
+            command->saveEffect(effect);
+        }
+
+        cout << "Play phase has begun\n" << endl;
+
+        //printing all commands received
+        for (Command* command: cp->getCommandsList()) {
+            cout << *(command->getCommandString()) << endl;
+            cout << *(command->getEffect()) << endl << endl;
+        }
+    }
+
+        // reading from a text file
+    else {
+        FileCommandProcessorAdapter* fp = new FileCommandProcessorAdapter();
+
+        //while state isn't in assign reinforcement (first step of play phase)
+        while (*state != 4) {
+            Command* command = fp->passCommand();
+            string* effect = execute(command->getCommandString());
+            command->saveEffect(effect);
+        }
+
+        cout << "Play phase has begun\n" << endl;
+
+        //printing all commands received
+        for (Command* command: fp->getCommandsList()) {
+            cout << *(command->getCommandString()) << endl;
+            cout << *(command->getEffect()) << endl << endl;
+        }
+    }
+}
+
+// GAME TRANSITION HELPERS
+
+string* GameEngine::execute(string* command) {
+    vector<string> commandElements = split(*command);
+    string* effect;
+
+    // call appropriate method
+    if (commandElements.at(0) == "loadmap") {
+        effect = loadMap(commandElements.at(1));
+    } else if (commandElements.at(0) == "validatemap") {
+        effect = validateMap();
+    } else if (commandElements.at(0) == "addplayer") {
+        effect = addPlayer(new string(commandElements.at(1)));
+    } else if (commandElements.at(0) == "gamestart") {
+        effect = gameStart();
+    }
+
+    return effect;
+
+}
+
+string* GameEngine::loadMap(string mapName) {
+
+    MapLoader* loader = new MapLoader;
+    this->gameMap = loader->loadMap(mapName);
+
+//    this->gameMap = testMap();
+
+    //effect
+    cout << "the map " << mapName << " was loaded into the game engine" << endl;
+
+    //transition state
+    string effect = "the map " + mapName + " was loaded into the game engine.\n";
+    effect += "this command transitions the game from " + *intToStringState[*state];
+    gameFlow("loadmap");
+    effect += " to " + *intToStringState[*state];
+    cout << *this << endl;
+    return new string(effect);
+}
+
+string* GameEngine::validateMap() {
+    string effect = "";
+
+    // invalid map
+    if (!this->gameMap->validate()) {
+        cout << "Map validation failed" << endl;
+        cout << *this << endl;
+        effect = "validatemap failed because the current map is invalid";
+        return new string(effect);
+    }
+
+    // valid map -> transition state
+    effect += "the game map is valid!\n";
+    effect += "this command transitions the game from " + *intToStringState[*state];
+    gameFlow("validatemap");
+    effect += " to " + *intToStringState[*state];
+    cout << *this << endl;
+    return new string(effect);
+
+}
+
+
+string* GameEngine::addPlayer(string* name) {
+    string effect = "";
+
+    //check num of players is less than 6
+    if (players.size() >= 6) {
+        cout << "too many players!" << endl;
+        effect = "this addplayer command failed because the maximum number of players is reached";
+        return new string(effect);
+    }
+
+    //add new player
+    Player* p = new Player(name);
+    players.push_back(p);
+
+    //effect
+    cout << *name << " was added to the game" << endl;
+
+    //transition state
+    effect += *name + " was added to the game\n";
+    effect += "this command transitions the game from " + *intToStringState[*state];
+    gameFlow("addplayer");
+    effect += " to " + *intToStringState[*state];
+    cout << *this << endl;
+    return new string(effect);
+}
+
+
+string* GameEngine::gameStart() {
+    string effect = "";
+
+    //check num of players is less than 6
+    if (players.size() < 2) {
+        effect = "this gamestart command failed because there are not enough players to start the game";
+        cout << effect << endl;
+        return new string(effect);
+    }
+
+    //init deck
+    Deck* d = new Deck(players);
+
+    //distribute territories to players
+    vector <Territory*> territories = gameMap->getAllTerritories();
+
+    for(int i = 0; i < players.size(); i++) {
+
+        //evenly assign territories to players
+        for (int j = i; j < territories.size(); j += players.size()) {
+            players.at(i)->addTerritory(territories.at(j));
+        }
+
+        //give 50 initial army units to each player (add to reinforcement pool)
+        players.at(i)->setReinforcements(50);
+
+        //each player draws 2 cards
+        players.at(i)->getHand()->addToHand(d->draw());
+        players.at(i)->getHand()->addToHand(d->draw());
+
+    }
+
+    //determine random order of players
+    shufflePlayerOrder();
+
+    //effect
+    cout << "the game has successfully started\n" << endl;
+    cout << "printing current game data..\n" << endl;
+
+    cout << "map info..." << endl;
+    cout << *(this->gameMap) << endl;
+
+    cout << "\nplayer info... " << endl;
+    for (Player* p : players) {
+        cout << *p << endl;
+    }
+
+    //transition state
+    effect = "this command transitions the game from " + *intToStringState[*state];
+    gameFlow("gamestart");
+    effect += " to " + *intToStringState[*state];
+    cout << *this << endl;
+    return new string(effect);
+}
+
+void GameEngine::shufflePlayerOrder() {
+
+    int numOfPlayers = players.size();
+
+    //swap random indices 10 times
+    for (int i = 0; i < 10; i++) {
+        srand(time(nullptr)); // a new set of random numbers is generated
+
+        //indices to swap
+        int randomIndex1 = rand() % (numOfPlayers-1);
+        int randomIndex2 = rand() % (numOfPlayers-1);
+
+        //swap
+        Player* tmp = players.at(randomIndex1);
+        players.at(randomIndex1) = players.at(randomIndex2);
+        players.at(randomIndex2) = tmp;
+    }
+
+}
+
+vector<string> GameEngine::split(string cmd) {
+    string delimiter = " ";
+    size_t pos = 0;
+    string command;
+    string name;
+    vector<string> elements;
+    bool isSpace = false;
+
+    while ((pos = cmd.find(delimiter)) != string::npos) {
+        isSpace = true;
+        command = cmd.substr(0, pos);
+        elements.push_back(command);
+        cmd.erase(0, pos + delimiter.length());
+        name = cmd.substr(0, pos+1);
+        elements.push_back(name);
+
+        break;
+    }
+    if (!isSpace) {
+        elements.push_back(cmd);
+    }
+
+    return elements;
+}
+Map* testMap() {
+
+    Map* m = new Map();
+
+    Continent* af = new Continent(new string("AFRICA"), new int (5));
+    Territory* kenya = new Territory(new string("KENYA"), af);
+    Territory* ethiopia = new Territory(new string("ETHIOPIA"), af);
+    Territory* sudan = new Territory(new string("SUDAN"), af);
+
+
+    Continent* as = new Continent(new string("ASIA"), new int (6));
+    Territory* india = new Territory(new string("INDIA"), as);
+    Territory* pakistan = new Territory(new string("PAKISTAN"), as);
+    Territory* china = new Territory(new string("CHINA"), as);
+
+    af->setListofTerritories(kenya);
+    af->setListofTerritories(ethiopia);
+    af->setListofTerritories(sudan);
+
+    as->setListofTerritories(india);
+    as->setListofTerritories(pakistan);
+    as->setListofTerritories(china);
+
+    kenya->setAdjacentTerritories(ethiopia);
+
+    ethiopia->setAdjacentTerritories(kenya);
+    ethiopia->setAdjacentTerritories(sudan);
+
+    sudan->setAdjacentTerritories(ethiopia);
+    sudan->setAdjacentTerritories(india);
+
+    india->setAdjacentTerritories(sudan);
+    india->setAdjacentTerritories(pakistan);
+    india->setAdjacentTerritories(china);
+
+    pakistan->setAdjacentTerritories(india);
+    pakistan->setAdjacentTerritories(china);
+
+    china->setAdjacentTerritories(pakistan);
+    china->setAdjacentTerritories(india);
+
+    m->setAllTerritories(kenya);
+    m->setAllTerritories(sudan);
+    m->setAllTerritories(ethiopia);
+    m->setAllTerritories(india);
+    m->setAllTerritories(pakistan);
+    m->setAllTerritories(china);
+
+    m->setSubgraph(af);
+    m->setSubgraph(as);
+
+    return m;
+
+}
+
+
+
+
+
+
+// MAIN GAME LOOP
 
 // DESTRUCTOR
 GameEngine::~GameEngine() {
@@ -168,14 +470,13 @@ GameEngine::~GameEngine() {
         entry.second = nullptr;
     }
 }
-//Dn
+
 void mainGameLoop(){
     //first phase of game loop is to calculate number of reinforcement armies
     //reinforcementPhase();
     //if listOfPlayers is equal to 1 call end game screen
 
 }
-
 
 //This method will loop over all the continents and check if a player owns all the territories in the particular continent
 // and return the total bonus value added to players' reinforceement pool
@@ -184,7 +485,7 @@ int GameEngine::continentBonus(Player* player, Map* map) {
     for (int i = 0; i < map->getSubgraph().size(); ++i) {
         bool getsTheBonus = true;
         for (int j = 0; j < map->getSubgraph()[i]->getListofTerritories().size(); ++j) {
-            if (map->getSubgraph()[i]->getListofTerritories()[j]->getPlayerName() != player->getName()) {
+            if (map->getSubgraph()[i]->getListofTerritories()[j]->getPlayerName() != *player->getName()) {
                 getsTheBonus = false;
                 break;
 
@@ -227,6 +528,12 @@ OrdersLists* GameEngine::issueOrdersPhase(vector<Player*> listOfPlayers,Map* map
     list->add(listOfPlayers[0]->issueOrder(2, map));
     list->add(listOfPlayers[0]->issueOrder(3, map));
     return list;
+}
+
+void executeOrdersPhase(OrdersLists* list ){
+    for (int i = 0; i < list->getListSize(); ++i) {
+        //executeOrder
+    }
 }
 
 

@@ -7,17 +7,7 @@ void testGameStates() {
     cout << "Start of game" << endl << endl;
     GameEngine* g = new GameEngine();
     cout << *g << endl;
-    //g->startupPhase();
-
-//
-//    while (*(g->getState()) < 8) {
-//        cout << "Enter command: " << endl;
-//        string input;
-//        cin >> input;
-//        g->gameFlow(input);
-//        cout << *g << endl;
-//    }
-
+    g->startupPhase();
     cout << "End of game" << endl;
 
 }
@@ -71,11 +61,11 @@ void testMainGameLoop(){
 
     cout<< "\n\nWe will now calculate their number of reinforcements that they get:" << endl;
     game->reinforcementPhase({ali, adriana, diego}, map);
-    cout << ali->getName() << " has: " << *ali->getReinforcements() << " reinforcements" << endl;
-    cout << adriana->getName() << " has: " << *adriana->getReinforcements()<< " reinforcements" << endl;
-    cout << diego->getName() << " has: " << *diego->getReinforcements() << " reinforcements" << endl;
-    //display them
-    //create orderslist
+    cout << *ali->getName() << " has: " << *ali->getReinforcements() << " reinforcements" << endl;
+    cout << *adriana->getName() << " has: " << *adriana->getReinforcements()<< " reinforcements" << endl;
+    cout << *diego->getName() << " has: " << *diego->getReinforcements() << " reinforcements" << endl;
+
+    //Calling the issueOrdersPhase method which returns and Orders List with the order created inside
     list = game->issueOrdersPhase(listofPlayers,map);
     cout << "\n\nNow we will remove a player from the game: \n";
     cout << "Adriana's number of territories: " << adriana->getTerritories().size() << " --> " ;
@@ -83,7 +73,7 @@ void testMainGameLoop(){
     cout << adriana->getTerritories().size() << " territories" << endl;
     for (int i = 0; i < listofPlayers.size(); ++i) {
         if(listofPlayers[i]->getTerritories().size() == 0){
-            cout << "Player: " << listofPlayers[i]->getName() << " has been removed from the game, since they have no more territories" << endl;
+            cout << "Player: " << *listofPlayers[i]->getName() << " has been removed from the game, since they have no more territories" << endl;
             listofPlayers.erase(listofPlayers.begin()+1);
         }
     }

@@ -21,6 +21,9 @@ Player::Player(string* pName) {
 
     this->hand = new Hand();
     this->orders = new OrdersLists;
+    this->reinforcements = new int(0);
+
+    this->receivedCard = new bool(false);    //amanda part 4
 
 }
 
@@ -33,6 +36,8 @@ Player::Player(const Player& copyPlayer) {
     this->deck = copyPlayer.deck;
     this->orders = copyPlayer.orders;
     this->territories = copyPlayer.territories;
+    this->negotiations = copyPlayer.negotiations;
+    this->receivedCard = copyPlayer.receivedCard;
 }
 
 // ASSIGNMENT OPERATOR
@@ -45,6 +50,8 @@ Player& Player::operator=(const Player& copyPlayer) {
     this->deck = copyPlayer.deck;
     this->orders = copyPlayer.orders;
     this->territories = copyPlayer.territories;
+    this->negotiations = copyPlayer.negotiations;
+////receiveCard here?
 
     return *this;
 }
@@ -82,8 +89,8 @@ int* Player::getId() {
     return id;
 }
 
-string Player::getName() {
-    return *this->name;
+string* Player::getName() {
+    return this->name;
 }
 
 Hand* Player::getHand() {
@@ -100,6 +107,14 @@ vector<Territory*> Player::getTerritories() {
 int* Player::getReinforcements(){
     return reinforcements;
 }
+vector<Player*> Player::getNegotiations() {     // amanda part 4
+    return this->negotiations;
+};
+
+bool* Player::getReceivedCard() {       // amanda part 4
+    return this->receivedCard;
+};
+
 
 // SETTERS
 
@@ -176,7 +191,7 @@ Order* Player::issueOrder(int orderNumber, Map* map) {
             int armiesToPlace = *this->getReinforcements();
             cout<< "Order has been created to send: " << armiesToPlace << " troops, to territory: " << ownTerritories[0]->getTerritoryName() << endl;
             this->setReinforcements(0);
-            order = new Deploy();
+            order = new Deploy(new int(armiesToPlace),new string(ownTerritories[0]->getTerritoryName()), this);
             break;
         }
         case 1: {
@@ -194,10 +209,11 @@ Order* Player::issueOrder(int orderNumber, Map* map) {
                 cout << i + 1 <<". " << toAtk[i]->getTerritoryName() << "\n";
             }
             cout << "\nYou have chosen to attack territory: " << toAtk[0]->getTerritoryName() << endl;
-            cout << "Please enter the number of armies to be advanced: " << "8" << endl;
-            cout << "Order has been created to advance: 8 army units from " << ownTerritories[0]->getTerritoryName()
+            int *armiesToSend = new int(8);
+            cout << "Please enter the number of armies to be advanced: " << *armiesToSend << endl;
+            cout << "Order has been created to advance: " <<*armiesToSend <<" army units from " << ownTerritories[0]->getTerritoryName()
                  << " to " << toAtk[0]->getTerritoryName() << endl;
-            order = new Advance();
+            order = new Advance(armiesToSend,new string(toAtk[0]->getTerritoryName()), new string(ownTerritories[0]->getTerritoryName()), this);
             break;
         }
         case 2: {
@@ -215,10 +231,11 @@ Order* Player::issueOrder(int orderNumber, Map* map) {
                 cout << i + 1 << ". " << toDef[i]->getTerritoryName() << "\n";
             }
             cout << "\nYou have chosen to defend territory: " << toDef[0]->getTerritoryName() << endl;
-            cout << "Please enter the number of armies to be advanced: " << "5" << endl;
-            cout << "Order has been created to advance: 5 army units from " << ownTerritories[1]->getTerritoryName()
+            int *armiesToSend = new int(5);
+            cout << "Please enter the number of armies to be advanced: " << *armiesToSend << endl;
+            cout << "Order has been created to advance: " <<*armiesToSend <<" army units from " << ownTerritories[1]->getTerritoryName()
                  << " to " << toDef[0]->getTerritoryName() << endl;
-            order = new Advance();
+            order = new Advance(armiesToSend,new string(toDef[0]->getTerritoryName()), new string(ownTerritories[0]->getTerritoryName()), this);
             break;
         }
         case 3:{
@@ -227,7 +244,7 @@ Order* Player::issueOrder(int orderNumber, Map* map) {
             vector<Territory*> enemyTerritories;
             int counter = 0;
             for (int i = 0; i < map->getAllTerritories().size(); ++i) {
-                if(map->getAllTerritories()[i]->getPlayerName()!=this->getName()){
+                if(map->getAllTerritories()[i]->getPlayerName()!=*this->getName()){
                     enemyTerritories.push_back(map->getAllTerritories()[i]);
                     cout << counter + 1 << ". " << enemyTerritories[counter]->getTerritoryName() << "\n";
                     counter++;
@@ -235,7 +252,7 @@ Order* Player::issueOrder(int orderNumber, Map* map) {
             }
             cout << "\nYou have chosen to Bomb: "<< enemyTerritories[0]->getTerritoryName() << endl;
             cout << "Order has been created to Bomb: " << enemyTerritories[0]->getTerritoryName() << endl;
-            order = new Bomb();
+            order = new Bomb(new string(enemyTerritories[0]->getTerritoryName()),this);
             break;
         }
     }

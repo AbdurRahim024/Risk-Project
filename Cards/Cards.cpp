@@ -23,11 +23,19 @@ Deck::Deck(const vector<Player*>& players) {
     Card* airlift2 = new Card(3);
     Card* diplomacy1 = new Card(4);
     Card* diplomacy2 = new Card(4);
+    Card* bomb3 = new Card(0);
+    Card* bomb4 = new Card(0);
+    Card* reinforcement3 = new Card(1);
+    Card* reinforcement4 = new Card(1);
 
     cards.push_back(bomb1);
     cards.push_back(bomb2);
+    cards.push_back(bomb3);
+    cards.push_back(bomb4);
     cards.push_back(reinforcement1);
     cards.push_back(reinforcement2);
+    cards.push_back(reinforcement3);
+    cards.push_back(reinforcement4);
     cards.push_back(blockade1);
     cards.push_back(blockade2);
     cards.push_back(airlift1);
@@ -96,7 +104,7 @@ Card* Deck::draw() {
     int randomIndex = rand() % (cardsInDeck-1);
 
     Card* randomCard = cards.at(randomIndex);
-    cards.erase(cards.begin()+randomIndex); //delete card from deck
+    cards.erase(cards.begin() + randomIndex); //delete card from deck
 
     return randomCard;
 

@@ -1,4 +1,3 @@
-
 #pragma once
 #include <cstdlib>
 #include <iostream>
@@ -6,10 +5,14 @@
 #include <unordered_map>
 #include "Player.h"
 #include "map.h"
+#include "CommandProcessing.h"
 using namespace std;
 
 class GameEngine {
 private:
+    Map* gameMap;
+    vector<Player*> players;
+
     unordered_map<int,vector<int*>> allowedStates;
     unordered_map<int,string*> intToStringState;
     static int* state;
@@ -39,11 +42,24 @@ public:
     // DESTRUCTOR
     ~GameEngine();
 
+    // START UP PHASE METHODS
+    void startupPhase();
+    string* execute(string* command);
+
+    string* loadMap(string mapName);
+    string* validateMap();
+    string* addPlayer(string* name);
+    string* gameStart();
+    void shufflePlayerOrder();
+
+    vector<string> split(string cmd);
+    Map* testMap();
+
 
     //Part 3 Abdur & Nauar
     void mainGameLoop();
     void reinforcementPhase(vector<Player*> listOfPlayers,Map* map);
     OrdersLists* issueOrdersPhase(vector<Player*> listOfPlayers,Map* map);
-    void executeOrdersPhase();
+    void executeOrdersPhase(OrdersLists* list );
     int continentBonus(Player* player, Map* map);
 };

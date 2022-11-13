@@ -94,7 +94,7 @@ Player* Territory::getPlayer(){
     return this->player;
 }
 string Territory::getPlayerName() {
-    return this->getPlayer()->getName();
+    return *this->getPlayer()->getName();
 }
 vector <Territory*> Territory:: getAdjacentTerritories(){
     return this->adjacentTerritories;
@@ -286,10 +286,8 @@ Territory* MapLoader::addTerritory(string tName, string cName){
 /*This method is going to create a map after reading the .map files provided by the user
 using io streams and return a pointer to the map object*/
 
-Map* MapLoader::loadMap(){
-    cout<<"Enter the name of the .map file you would like to open: "<<endl;
-    string fileName;
-    cin>>fileName;
+Map* MapLoader::loadMap(string mapName){
+    string fileName = mapName;
     cout<<"You have chosen file name: "<<fileName<<endl;
     realMap = new Map();
     string extension = fileName.substr((fileName.length())-4,fileName.length());
