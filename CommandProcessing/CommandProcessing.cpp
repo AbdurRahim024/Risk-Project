@@ -5,10 +5,14 @@
 #include <fstream>
 using namespace std;
 
+class LogObserver;
+
 //TODO: copy constructor, assignment op, stream insertion
 
 int zro = 0;
 int* FileCommandProcessorAdapter::counter = &zro;
+LogObserver* Command::obs = NULL;
+LogObserver* CommandProcessor ::obs = NULL;
 
 //---------------CONSTRUCTORS-------------------
 Command::Command() {};
@@ -90,7 +94,7 @@ Command* CommandProcessor::saveCommand(string *com, string *effect) {
 
     return command;
 
-}
+};
 
 //Called from Game Engine to receive command from user
 //First reads a command from the user in readCommand

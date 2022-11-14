@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ORDERS_H
+#define ORDERS_H
 #include "map.h"
 #include "Player.h"
 #include "Cards.h"
@@ -13,6 +15,8 @@ class Player;
 class Hand;
 class Card;
 class Deck;
+class Subject; //dom added
+class ILoggable;
 
 
 extern Player* playerN;
@@ -47,6 +51,8 @@ public:
     virtual void execute();
     static Order* createSubtype(string s);
     static Order* createSubtype(Order* order);
+    string stringToLog() override;
+    void Notify() override;
     friend ostream & operator << (ostream &in, Order &o);
 };
 
@@ -202,7 +208,7 @@ public:
 
 
 
-class OrdersLists:public Subject, public ILoggable{
+class OrdersLists : public Subject, public ILoggable {
 private:
     vector<Order*> orders;
 
@@ -223,3 +229,7 @@ public:
 
 
 ostream & operator << (ostream &out, Order &o);
+
+
+
+#endif

@@ -10,6 +10,10 @@
 
 using namespace std;
 
+class Observer; //dom added
+class LogObserver;
+class ILoggable;
+
 class GameEngine: public Subject, public ILoggable{
 private:
     Map* gameMap;

@@ -30,8 +30,9 @@ private:
 
     //Part 3 Abdur & Nauar
     int* reinforcements;
-    vector<Player*> negotiations;     // amanda part 4
-    bool* receivedCard;     // amanda part 4
+    vector<Player*> negotiations;
+    bool* receivedCard;
+    // Note for future assignment: negotiations and receivedCard will need to be reset at each round
 
 public:
     // CONSTRUCTOR
@@ -56,8 +57,8 @@ public:
     //Part 3 Abdur & Nauar
     int* getReinforcements();
 
-    vector<Player*> getNegotiations();  // amanda part 4
-    bool* getReceivedCard();      // amanda part 4
+    vector<Player*> getNegotiations();
+    bool* getReceivedCard();
 
     // SETTERS
     // void setPlayerCount(int playerCount);
@@ -71,8 +72,8 @@ public:
     //Part 3 Abdur & Nauar
     void setReinforcements(int noOfReinforcements);
 
-    void setNegotiations(vector<Player*> negotiations);     // amanda part 4
-    void setReceivedCard(bool* boolean);        // amanda part 4
+    void setNegotiations(vector<Player*> negotiations);
+    void setReceivedCard(bool* boolean);
 
     // OTHER
     void addTerritory(Territory* newTerr);

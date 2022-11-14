@@ -1,9 +1,11 @@
 #include "LoggingObserver.h"
 #include <algorithm>
 using namespace std;
-Observer::Observer(){
 
-}
+//OBSERVER INTERFACE
+Observer::Observer() {
+};
+
 Observer::~Observer() {
 
 };

@@ -6,9 +6,14 @@
 
 
 using namespace std;
+
+class Subject;
+class ILoggable;
+
 class Observer {
     public:
         //-------------- Constructor --------------//
+        // Default
         Observer();
 
         //-------------- Destructor --------------//

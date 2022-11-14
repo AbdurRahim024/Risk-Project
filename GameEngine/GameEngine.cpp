@@ -526,7 +526,7 @@ OrdersLists* GameEngine::issueOrdersPhase(vector<Player*> listOfPlayers,Map* map
 void executeOrdersPhase(OrdersLists* list){
 //    print header
     cout << "======= ORDERS NOW EXECUTING =======" << endl << endl;
-//    call execute on and print each Order of orders
+//    call execute on and print each order
     for(Order* o : list->getOrders()) {
         o->execute();
         cout << *o;

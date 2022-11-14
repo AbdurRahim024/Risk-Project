@@ -30,6 +30,7 @@ class Command
 private:
     string* command;
     string* effect;
+    static LogObserver* obs;
 
 public:
     Command* saveEffect(string *effect);
@@ -41,6 +42,7 @@ public:
     //Getters
     string* getEffect();
     string* getCommandString();
+    static void setObserver(Observer* o);
 
     //destructor
     ~Command();
@@ -81,6 +83,12 @@ public:
     ~FileLineReader();
 
 };
+
+
+ostream &operator << (ostream &output, Command &obj);
+ostream &operator << (ostream &output, CommandProcessor &obj);
+ostream &operator << (ostream &output, FileCommandProcessorAdapter &obj);
+ostream &operator << (ostream &output, FileLineReader &obj);
 
 
 #endif //RISK_PROJECT_COMMANDPROCESSING_H

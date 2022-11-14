@@ -23,7 +23,7 @@ Player::Player(string* pName) {
     this->orders = new OrdersLists;
     this->reinforcements = new int(0);
 
-    this->receivedCard = new bool(false);    //amanda part 4
+    this->receivedCard = new bool(false);
 
 }
 
@@ -107,11 +107,11 @@ vector<Territory*> Player::getTerritories() {
 int* Player::getReinforcements(){
     return reinforcements;
 }
-vector<Player*> Player::getNegotiations() {     // amanda part 4
+vector<Player*> Player::getNegotiations() {
     return this->negotiations;
 };
 
-bool* Player::getReceivedCard() {       // amanda part 4
+bool* Player::getReceivedCard() {
     return this->receivedCard;
 };
 
@@ -146,11 +146,11 @@ void Player::setReinforcements(int noOfReinforcements) {
 }
 
 
-void Player::setNegotiations(vector<Player *> negotiations) {       // amanda part 4
+void Player::setNegotiations(vector<Player *> negotiations) {
     this->negotiations = negotiations;
 };
 
-void Player::setReceivedCard(bool* receivedCard) {       // amanda part 4
+void Player::setReceivedCard(bool* receivedCard) {
     this->receivedCard = receivedCard;
 };
 
