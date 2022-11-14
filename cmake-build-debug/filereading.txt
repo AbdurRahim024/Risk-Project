@@ -1,0 +1,10 @@
+loadmap Asia.map
+asdasd
+validatemap
+addplayer emmuh
+addplayer dom
+addplayer !nawAR
+addplayer abador
+addplayer yourboy
+asd
+gamestart

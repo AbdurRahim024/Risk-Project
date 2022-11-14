@@ -1062,6 +1062,15 @@ void OrdersLists::execute() {
     cout << "===== ORDERS FINISHED EXECUTING =====" << endl << endl << endl << endl << endl;
 }
 
+string OrdersLists::stringToLog() {
+    string orderAdded = "Order: " + *this->getOrders()[this->getListSize() - 1]->getOrderName() + " has been added by player: " + *this->getOrders()[this->getListSize() - 1]->getPlayer()->getName();
+    return orderAdded;
+};
+
+void OrdersLists::Notify() {
+    string orderAdded = this->stringToLog();
+    OrdersLists::obs->update(orderAdded);
+};
 
 
 

@@ -17,6 +17,10 @@ private:
     unordered_map<int,vector<int*>> allowedStates;
     unordered_map<int,string*> intToStringState;
     static int* state;
+    string* transitionLog;
+
+    //ILoggable
+    static LogObserver* obs;
 
 public:
     // CONSTRUCTOR
@@ -63,4 +67,9 @@ public:
     OrdersLists* issueOrdersPhase(vector<Player*> listOfPlayers,Map* map);
     void executeOrdersPhase(OrdersLists* list );
     int continentBonus(Player* player, Map* map);
+
+    //ILoggable
+    static void setObserver(LogObserver* o);
+    void Notify() override;
+    string stringToLog() override;
 };

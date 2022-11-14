@@ -7,6 +7,7 @@
 
 int zeroState = 0;
 int* GameEngine::state = &zeroState;
+LogObserver* GameEngine::obs = NULL;
 
 GameEngine::GameEngine() {
     intToStringState[0] = new string("start");
@@ -87,6 +88,7 @@ unordered_map<int, string *> GameEngine::getIntToStringState() {
 
 void GameEngine::gameFlow(string userInput) {
     // this method handles state transitions
+
 
     // convert user input from string to int
     int moveInt = userInputToInt(userInput);
@@ -241,7 +243,6 @@ string* GameEngine::loadMap(string mapName) {
     string effect = "the map " + mapName + " was loaded into the game engine.\n";
     effect += "this command transitions the game from " + *intToStringState[*state];
     gameFlow("loadmap");
-    effect += " to " + *intToStringState[*state];
     cout << *this << endl;
     return new string(effect);
 }
@@ -261,7 +262,6 @@ string* GameEngine::validateMap() {
     effect += "the game map is valid!\n";
     effect += "this command transitions the game from " + *intToStringState[*state];
     gameFlow("validatemap");
-    effect += " to " + *intToStringState[*state];
     cout << *this << endl;
     return new string(effect);
 
@@ -289,7 +289,6 @@ string* GameEngine::addPlayer(string* name) {
     effect += *name + " was added to the game\n";
     effect += "this command transitions the game from " + *intToStringState[*state];
     gameFlow("addplayer");
-    effect += " to " + *intToStringState[*state];
     cout << *this << endl;
     return new string(effect);
 }
@@ -343,9 +342,8 @@ string* GameEngine::gameStart() {
     }
 
     //transition state
-    effect = "this command transitions the game from " + *intToStringState[*state];
+    effect = "The game has successfully started\n";
     gameFlow("gamestart");
-    effect += " to " + *intToStringState[*state];
     cout << *this << endl;
     return new string(effect);
 }
@@ -450,10 +448,6 @@ Map* testMap() {
 }
 
 
-
-
-
-
 // MAIN GAME LOOP
 
 // DESTRUCTOR
@@ -546,5 +540,17 @@ void executeOrdersPhase(OrdersLists* list){
 
 
 
+//ILoggable
+void GameEngine::Notify() {
+    string status = this->stringToLog();
+    GameEngine::obs->update(status);
+}
 
+string GameEngine::stringToLog() {
+    return *transitionLog;
+}
+
+void GameEngine::setObserver(LogObserver* o) {
+    GameEngine::obs = o;
+}
 

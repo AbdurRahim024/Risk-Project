@@ -1,6 +1,10 @@
+#pragma once
 #include <vector>
 #include <iostream>
 #include <string>
+#include <fstream>
+
+
 using namespace std;
 class Observer {
     public:
@@ -42,4 +46,20 @@ class ILoggable{
         ILoggable();
         ~ILoggable();
         virtual string stringToLog() = 0;
+};
+
+class LogObserver : public Observer {
+private:
+    ofstream fw;
+
+public:
+    LogObserver(string filename);
+    LogObserver(LogObserver* log);
+    ~LogObserver();
+    void update(string status);
+    ofstream getFW();
+
+    friend ostream &operator << (ostream &output, LogObserver &obs);
+
+    const LogObserver &operator=(LogObserver *logObserver);
 };
