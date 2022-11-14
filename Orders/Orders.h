@@ -2,6 +2,7 @@
 #include "map.h"
 #include "Player.h"
 #include "Cards.h"
+#include "LoggingObserver.h"
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -19,7 +20,7 @@ extern vector<Player*> players;
 extern Deck* deck;
 
 
-class Order {
+class Order : public Subject, public ILoggable {
 private:
     string* orderName;
     string* orderEffect;

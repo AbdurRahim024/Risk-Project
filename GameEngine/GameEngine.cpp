@@ -532,10 +532,16 @@ OrdersLists* GameEngine::issueOrdersPhase(vector<Player*> listOfPlayers,Map* map
     return list;
 }
 
-void executeOrdersPhase(OrdersLists* list ){
-    for (int i = 0; i < list->getListSize(); ++i) {
-        //executeOrder
+void executeOrdersPhase(OrdersLists* list){
+//    print header
+    cout << "======= ORDERS NOW EXECUTING =======" << endl << endl;
+//    call execute on and print each Order of orders
+    for(Order* o : list->getOrders()) {
+        o->execute();
+        cout << *o;
     }
+//    print footer
+    cout << "===== ORDERS FINISHED EXECUTING =====" << endl << endl << endl << endl << endl;
 }
 
 
