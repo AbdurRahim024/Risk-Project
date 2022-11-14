@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include "LoggingObserver.h"
 #include "GameEngine.h"
 using namespace std;
 

@@ -11,7 +11,7 @@ using namespace std;
 ///// to do github
 
 
-
+LogObserver* Order::obs = NULL;
 //////////////////////////////    ORDER    //////////////////////////////
 ///// CONSTRUCTORS
 Order::Order() {
@@ -143,7 +143,18 @@ Order* Order::createSubtype(Order* order) {
     }
 };
 
+string Order::stringToLog() {
+    string orderString = "The order: " + *this->getOrderName() + " has taken effect: " + *this->getOrderEffect();
+    return orderString;
+};
 
+void Order::Notify() {
+    string orderExecString = this->stringToLog();
+    Order::obs->update(orderExecString);
+};
+void Order::setObserver(LogObserver* o) {
+    Order::obs = o;
+}
 
 
 
@@ -253,6 +264,8 @@ void Deploy::execute() {
     bool* boolean = this->validate();
 //    if statement to verify if the order was valid
     if(!*boolean) {
+        this->setOrderEffect(new string("order failed"));
+        this->Notify();
         return;
     }
 //    update player's reinforcements using the setter method
@@ -265,6 +278,7 @@ void Deploy::execute() {
     this->setOrderEffect(new string(effect));
 //    calling setters to influence friend operator
     this->setExecutable(boolean);
+    this->Notify();
 };
 
 
@@ -428,6 +442,8 @@ void Advance::execute() {
     bool* boolean = this->validate();
 //    if statement to verify if the order was valid
     if(!*boolean) {
+        this->setOrderEffect(new string("order failed"));
+        this->Notify();
         return;
     }
 //    if player owns both targetTerritory and sourceTerritory, add unitsToSend to targetTerritory
@@ -471,6 +487,7 @@ void Advance::execute() {
     this->setOrderEffect(new string(effect));
 //    calling setters to influence friend operator
     this->setExecutable(boolean);
+    this->Notify();
 };
 
 
@@ -585,6 +602,8 @@ void Bomb::execute() {
     bool* boolean = this->validate();
 //    if statement to verify if the order was valid
     if(!*boolean) {
+        this->setOrderEffect(new string("order failed"));
+        this->Notify();
         return;
     }
 //    update targetTerritory's number of armies using the getter and setter methods
@@ -594,6 +613,7 @@ void Bomb::execute() {
     this->setOrderEffect(new string(effect));
 //    calling setters to influence friend operator
     this->setExecutable(boolean);
+    this->Notify();
 };
 
 
@@ -674,6 +694,8 @@ void Blockade::execute() {
     bool* boolean = this->validate();
 //    if statement to verify if the order was valid
     if(!*boolean) {
+        this->setOrderEffect(new string("order failed"));
+        this->Notify();
         return;
     }
 //    update targetTerritory's number of armies using the getter and setter methods
@@ -694,6 +716,7 @@ void Blockade::execute() {
     this->setOrderEffect(new string(effect));
 //    calling setters to influence friend operator
     this->setExecutable(boolean);
+    this->Notify();
 };
 
 
@@ -843,6 +866,8 @@ void Airlift::execute() {
     bool* boolean = this->validate();
 //    if statement to verify if the order was valid
     if(!*boolean) {
+        this->setOrderEffect(new string("order failed"));
+        this->Notify();
         return;
     }
 //    update targetTerritory's number of armies using the getter and setter methods
@@ -853,6 +878,7 @@ void Airlift::execute() {
     this->setOrderEffect(new string(effect));
 //    calling setters to influence friend operator
     this->setExecutable(boolean);
+    this->Notify();
 };
 
 
@@ -957,11 +983,14 @@ void Negotiate::execute() {
     bool* boolean = this->validate();
 //    if statement to verify if the order was valid
     if(!*boolean) {
+        this->setOrderEffect(new string("order failed"));
+        this->Notify();
         return;
     }
 //    calling setters to influence friend operator
     this->setExecutable(boolean);
     this->setOrderEffect(new string("A negotiation was set in place with " + *this->targetName + "."));
+    this->Notify();
 };
 
 
@@ -969,6 +998,7 @@ void Negotiate::execute() {
 
 
 //////////////////////////////    ORDERSLISTS    //////////////////////////////
+LogObserver* OrdersLists::obs = NULL;
 ///// CONSTRUCTORS
 OrdersLists::OrdersLists() {};
 
@@ -1075,6 +1105,9 @@ void OrdersLists::Notify() {
     OrdersLists::obs->update(orderAdded);
 };
 
+void OrdersLists::setObserver(LogObserver* o) {
+    OrdersLists::obs = o;
+}
 
 
 

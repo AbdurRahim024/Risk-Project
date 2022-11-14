@@ -113,6 +113,9 @@ void GameEngine::gameFlow(string userInput) {
         // invalid move
         cout << "Invalid move! Try again" << endl << endl;
     }
+
+    transitionLog = new string("New state: " + *intToStringState[*state] + "\n");
+    Notify();
 }
 
 bool GameEngine::validateMove(int move) {
@@ -534,8 +537,6 @@ void executeOrdersPhase(OrdersLists* list){
 //    print footer
     cout << "===== ORDERS FINISHED EXECUTING =====" << endl << endl << endl << endl << endl;
 }
-
-
 
 //ILoggable
 void GameEngine::Notify() {

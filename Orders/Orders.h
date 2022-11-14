@@ -29,6 +29,7 @@ private:
     string* orderName;
     string* orderEffect;
     bool* executable;
+    static LogObserver* obs;
 
 protected:
     Player* player;
@@ -54,6 +55,7 @@ public:
     string stringToLog() override;
     void Notify() override;
     friend ostream & operator << (ostream &in, Order &o);
+    static void setObserver(LogObserver* o);
 };
 
 
@@ -211,6 +213,7 @@ public:
 class OrdersLists : public Subject, public ILoggable {
 private:
     vector<Order*> orders;
+    static LogObserver* obs;
 
 public:
     OrdersLists();
@@ -224,6 +227,9 @@ public:
     void remove(Order* order);
     void move(int firstIndex, int secondIndex);
     void execute();
+    string stringToLog() override;
+    void Notify() override;
+    static void setObserver(LogObserver* o);
 };
 
 
