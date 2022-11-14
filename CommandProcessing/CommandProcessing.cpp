@@ -75,7 +75,14 @@ string CommandProcessor::readCommand() {
     getline(cin, command);
     return command;
 };
-
+void CommandProcessor::Notify() {
+    string commandAdded = this->stringToLog();
+    CommandProcessor::obs->update(commandAdded);
+};
+string CommandProcessor::stringToLog() {
+    string commandAdded = "Command: " + *this->getCommandsList()[this->getListCommand()-1]->getCommandString()+ " has been added.";
+            return commandAdded;
+};
 //Saving a command object that will hold the command and the resulting effect from it
 Command* CommandProcessor::saveCommand(string *com, string *effect) {
     Command* command  = new Command(com, effect );

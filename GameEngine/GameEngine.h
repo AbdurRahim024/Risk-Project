@@ -7,6 +7,7 @@
 #include "map.h"
 #include "CommandProcessing.h"
 #include "LoggingObserver.h"
+
 using namespace std;
 
 class GameEngine: public Subject, public ILoggable{

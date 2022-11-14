@@ -237,11 +237,10 @@ string* GameEngine::loadMap(string mapName) {
 //    this->gameMap = testMap();
 
     //effect
-    cout << "the map " << mapName << " was loaded into the game engine" << endl;
+    cout << "The map " << mapName << " was loaded into the game engine" << endl;
 
     //transition state
-    string effect = "the map " + mapName + " was loaded into the game engine.\n";
-    effect += "this command transitions the game from " + *intToStringState[*state];
+    string effect = "The map " + mapName + " was loaded into the game engine.\n";
     gameFlow("loadmap");
     cout << *this << endl;
     return new string(effect);
@@ -259,8 +258,7 @@ string* GameEngine::validateMap() {
     }
 
     // valid map -> transition state
-    effect += "the game map is valid!\n";
-    effect += "this command transitions the game from " + *intToStringState[*state];
+    effect += "The current game map is valid!\n";
     gameFlow("validatemap");
     cout << *this << endl;
     return new string(effect);
@@ -273,8 +271,8 @@ string* GameEngine::addPlayer(string* name) {
 
     //check num of players is less than 6
     if (players.size() >= 6) {
-        cout << "too many players!" << endl;
-        effect = "this addplayer command failed because the maximum number of players is reached";
+        cout << "Too many players!" << endl;
+        effect = "This addplayer command failed because the maximum number of players is reached";
         return new string(effect);
     }
 
@@ -287,7 +285,6 @@ string* GameEngine::addPlayer(string* name) {
 
     //transition state
     effect += *name + " was added to the game\n";
-    effect += "this command transitions the game from " + *intToStringState[*state];
     gameFlow("addplayer");
     cout << *this << endl;
     return new string(effect);
@@ -299,7 +296,7 @@ string* GameEngine::gameStart() {
 
     //check num of players is less than 6
     if (players.size() < 2) {
-        effect = "this gamestart command failed because there are not enough players to start the game";
+        effect = "This gamestart command failed because there are not enough players to start the game";
         cout << effect << endl;
         return new string(effect);
     }
@@ -330,8 +327,8 @@ string* GameEngine::gameStart() {
     shufflePlayerOrder();
 
     //effect
-    cout << "the game has successfully started\n" << endl;
-    cout << "printing current game data..\n" << endl;
+    cout << "The game has successfully started\n" << endl;
+    cout << "Printing current game data..\n" << endl;
 
     cout << "map info..." << endl;
     cout << *(this->gameMap) << endl;
