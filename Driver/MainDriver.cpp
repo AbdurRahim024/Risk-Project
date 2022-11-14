@@ -50,6 +50,8 @@
 //}
 int main(){
     testMainGameLoop();
+    cout << endl << endl << endl << endl;       //a: added newlines
+    testOrdersLists();
     testGameStates();
     return 0;
 }

@@ -4,4 +4,9 @@
 
 using namespace std;
 
+
+class Map;
+class Territory;
+
+
 void testOrdersLists();
