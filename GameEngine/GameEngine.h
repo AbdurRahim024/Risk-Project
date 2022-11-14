@@ -6,9 +6,10 @@
 #include "Player.h"
 #include "map.h"
 #include "CommandProcessing.h"
+#include "LoggingObserver.h"
 using namespace std;
 
-class GameEngine {
+class GameEngine: public Subject, public ILoggable{
 private:
     Map* gameMap;
     vector<Player*> players;

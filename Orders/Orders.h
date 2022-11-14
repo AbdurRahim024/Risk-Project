@@ -201,7 +201,7 @@ public:
 
 
 
-class OrdersLists {
+class OrdersLists:public Subject, public ILoggable{
 private:
     vector<Order*> orders;
 
