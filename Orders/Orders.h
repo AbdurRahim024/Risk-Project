@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ORDERS_H
+#define ORDERS_H
 #include "map.h"
 #include "Player.h"
 #include "Cards.h"
@@ -13,6 +15,8 @@ class Player;
 class Hand;
 class Card;
 class Deck;
+class Subject; //dom added
+class ILoggable;
 
 
 extern Player* playerN;
@@ -25,6 +29,7 @@ private:
     string* orderName;
     string* orderEffect;
     bool* executable;
+    static LogObserver* obs;
 
 protected:
     Player* player;
@@ -47,7 +52,10 @@ public:
     virtual void execute();
     static Order* createSubtype(string s);
     static Order* createSubtype(Order* order);
+    string stringToLog() override;
+    void Notify() override;
     friend ostream & operator << (ostream &in, Order &o);
+    static void setObserver(LogObserver* o);
 };
 
 
@@ -202,9 +210,10 @@ public:
 
 
 
-class OrdersLists:public Subject, public ILoggable{
+class OrdersLists : public Subject, public ILoggable {
 private:
     vector<Order*> orders;
+    static LogObserver* obs;
 
 public:
     OrdersLists();
@@ -218,8 +227,15 @@ public:
     void remove(Order* order);
     void move(int firstIndex, int secondIndex);
     void execute();
+    string stringToLog() override;
+    void Notify() override;
+    static void setObserver(LogObserver* o);
 };
 
 
 
 ostream & operator << (ostream &out, Order &o);
+
+
+
+#endif

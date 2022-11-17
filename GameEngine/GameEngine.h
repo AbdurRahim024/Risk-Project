@@ -7,7 +7,12 @@
 #include "map.h"
 #include "CommandProcessing.h"
 #include "LoggingObserver.h"
+
 using namespace std;
+
+class Observer; //dom added
+class LogObserver;
+class ILoggable;
 
 class GameEngine: public Subject, public ILoggable{
 private:
@@ -17,6 +22,10 @@ private:
     unordered_map<int,vector<int*>> allowedStates;
     unordered_map<int,string*> intToStringState;
     static int* state;
+    string* transitionLog;
+
+    //ILoggable
+    static LogObserver* obs;
 
 public:
     // CONSTRUCTOR
@@ -63,4 +72,9 @@ public:
     OrdersLists* issueOrdersPhase(vector<Player*> listOfPlayers,Map* map);
     void executeOrdersPhase(OrdersLists* list );
     int continentBonus(Player* player, Map* map);
+
+    //ILoggable
+    static void setObserver(LogObserver* o);
+    void Notify() override;
+    string stringToLog() override;
 };

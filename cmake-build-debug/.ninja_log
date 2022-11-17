@@ -1,0 +1,20 @@
+# ninja log v5
+675	728	1668402082292513020	Risk_Project	54df0b8954048f37
+3503	4769	1668403782582521361	CMakeFiles/Risk_Project.dir/LoggingObserver/LoggingObserverDriver.cpp.o	d23d7e1b843d5521
+0	165	1668397357352918738	build.ninja	52d7546607a46195
+6	3575	1668403781385419660	CMakeFiles/Risk_Project.dir/GameEngine/GameEngine.cpp.o	583aef6278f296f
+2382	3859	1668403781653338863	CMakeFiles/Risk_Project.dir/Orders/Orders.cpp.o	28ed6aff52e97e26
+4	1529	1668397262757683809	CMakeFiles/Risk_Project.dir/Map/mapDriver.cpp.o	8d8749d5dd335b16
+2930	4178	1668403781992267530	CMakeFiles/Risk_Project.dir/Player/Player.cpp.o	8108d54838334f7c
+3	2894	1668403780707227315	CMakeFiles/Risk_Project.dir/CommandProcessing/CommandProcessing.cpp.o	c38db57b67046a0e
+2295	3503	1668403781307340234	CMakeFiles/Risk_Project.dir/LoggingObserver/LoggingObserver.cpp.o	e0491f5cebb6dbaf
+2572	3782	1668403781585340698	CMakeFiles/Risk_Project.dir/Orders/OrdersDriver.cpp.o	f836d5997adcaa50
+2322	3913	1668403781726333261	CMakeFiles/Risk_Project.dir/Map/map.cpp.o	452f2bafc9abede6
+1601	2553	1668397263781647891	CMakeFiles/Risk_Project.dir/helloteam.cpp.o	3cf23b4cf92ed661
+10	2572	1668403780384849853	CMakeFiles/Risk_Project.dir/GameEngine/GameEngineDriver.cpp.o	72f4e437ec162c17
+3	2294	1668403780107284359	CMakeFiles/Risk_Project.dir/Driver/MainDriver.cpp.o	af17b3681d8d7c6a
+2	2382	1668403780193603741	CMakeFiles/Risk_Project.dir/Cards/Cards.cpp.o	bcf86366bc01af68
+3	2322	1668403780135044984	CMakeFiles/Risk_Project.dir/CommandProcessing/CommandProcessingDriver.cpp.o	ac4e5691e2e4068d
+2330	3744	1668397264970813769	CMakeFiles/Risk_Project.dir/Cards/CardsDriver.cpp.o	95204b514f4cf838
+1	609	1668403826347808445	CMakeFiles/Risk_Project.dir/Driver/MainDriver.cpp.o	af17b3681d8d7c6a
+609	705	1668403826447760069	Risk_Project	54df0b8954048f37

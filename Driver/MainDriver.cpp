@@ -1,9 +1,64 @@
-#include "CardsDriver.h"
+
+//#include "CardsDriver.h"
 #include "mapDriver.h"
 #include "GameEngineDriver.h"
 #include "PlayerDriver.h"
 #include "OrdersDriver.h"
 #include <iostream>
+//#include "LoggingObserverDriver.cpp"
+
+//int main() {
+//
+//    //part 1 & 2
+//    testGameStates();
+//
+//    //part 3
+//    testMainGameLoop();
+//
+//    cout << endl << endl << endl << endl;
+//
+//    //part 4
+//    testOrdersLists();
+//
+//    //part 5
+//    testLogObserver();
+//
+//    return 0;
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //int main () {
@@ -48,10 +103,5 @@
 //    }
 //    return 0;
 //}
-int main(){
-    testMainGameLoop();
-    cout << endl << endl << endl << endl;       //a: added newlines
-    testOrdersLists();
-    testGameStates();
-    return 0;
-}
+
+

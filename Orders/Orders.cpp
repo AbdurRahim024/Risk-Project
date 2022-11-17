@@ -11,7 +11,7 @@ using namespace std;
 ///// to do github
 
 
-
+LogObserver* Order::obs = NULL;
 //////////////////////////////    ORDER    //////////////////////////////
 ///// CONSTRUCTORS
 Order::Order() {
@@ -143,7 +143,18 @@ Order* Order::createSubtype(Order* order) {
     }
 };
 
+string Order::stringToLog() {
+    string orderString = "The order: " + *this->getOrderName() + " has taken effect: " + *this->getOrderEffect();
+    return orderString;
+};
 
+void Order::Notify() {
+    string orderExecString = this->stringToLog();
+    Order::obs->update(orderExecString);
+};
+void Order::setObserver(LogObserver* o) {
+    Order::obs = o;
+}
 
 
 
@@ -253,18 +264,21 @@ void Deploy::execute() {
     bool* boolean = this->validate();
 //    if statement to verify if the order was valid
     if(!*boolean) {
+        this->setOrderEffect(new string("order failed"));
+        this->Notify();
         return;
     }
 //    update player's reinforcements using the setter method
     this->player->setReinforcements(this->unitsAtStart - this->unitsToSend);
 //    update target territory's number of armies
-    this->targetTerritory->setNoOfArmies(this->targetTerritory->getNoOfArmies() + *this->unitsToSend);
+    this->targetTerritory->setNoOfArmies(new int(this->targetTerritory->getNoOfArmies() + *this->unitsToSend));
 //    calling setter to set orderEffect
     string effect = to_string(*this->unitsToSend) + " troops are deployed to " + *this->targetName + ". There are now " +
                     to_string(this->targetTerritory->getNoOfArmies()) + " armies.";
     this->setOrderEffect(new string(effect));
 //    calling setters to influence friend operator
     this->setExecutable(boolean);
+    this->Notify();
 };
 
 
@@ -428,22 +442,24 @@ void Advance::execute() {
     bool* boolean = this->validate();
 //    if statement to verify if the order was valid
     if(!*boolean) {
+        this->setOrderEffect(new string("order failed"));
+        this->Notify();
         return;
     }
 //    if player owns both targetTerritory and sourceTerritory, add unitsToSend to targetTerritory
     if(this->player->getName()->compare(*this->targetTerritory->getPlayer()->getName()) == 0) {
-        this->targetTerritory->setNoOfArmies(this->targetTerritory->getNoOfArmies() + *this->unitsToSend);
+        this->targetTerritory->setNoOfArmies(new int(this->targetTerritory->getNoOfArmies() + *this->unitsToSend));
     }
 //    else, update number of armies in targetTerritory and sourceTerritory
     else {
         int sourceArmies = this->sourceTerritory->getNoOfArmies();
         int targetArmies = this->targetTerritory->getNoOfArmies();
-        this->targetTerritory->setNoOfArmies(this->targetTerritory->getNoOfArmies() - (sourceArmies * 0.6));
-        this->sourceTerritory->setNoOfArmies(this->sourceTerritory->getNoOfArmies() - (targetArmies * 0.7));
+        this->targetTerritory->setNoOfArmies(new int(this->targetTerritory->getNoOfArmies() - (sourceArmies * 0.6)));
+        this->sourceTerritory->setNoOfArmies(new int(this->sourceTerritory->getNoOfArmies() - (targetArmies * 0.7)));
     }
 //    if there are no more enemy armies in targetTerritory, update its number of armies, its player, and the player's territories
     if(this->targetTerritory->getNoOfArmies() <= 0) {
-        this->targetTerritory->setNoOfArmies(this->sourceTerritory->getNoOfArmies());
+        this->targetTerritory->setNoOfArmies(new int(this->sourceTerritory->getNoOfArmies()));
         this->targetTerritory->setPlayer(this->player);
         vector<Territory*> oldOwnerTerritories = this->targetTerritory->getPlayer()->getTerritories();
         for(int i = 0; i < oldOwnerTerritories.size(); i++) {
@@ -471,6 +487,7 @@ void Advance::execute() {
     this->setOrderEffect(new string(effect));
 //    calling setters to influence friend operator
     this->setExecutable(boolean);
+    this->Notify();
 };
 
 
@@ -585,15 +602,18 @@ void Bomb::execute() {
     bool* boolean = this->validate();
 //    if statement to verify if the order was valid
     if(!*boolean) {
+        this->setOrderEffect(new string("order failed"));
+        this->Notify();
         return;
     }
 //    update targetTerritory's number of armies using the getter and setter methods
-    this->targetTerritory->setNoOfArmies(this->targetTerritory->getNoOfArmies() / 2);
+    this->targetTerritory->setNoOfArmies(new int(this->targetTerritory->getNoOfArmies() / 2));
 //    calling setter to set orderEffect
     string effect = *this->targetName + " was bombed. There remains " + to_string(this->targetTerritory->getNoOfArmies()) + " armies.";
     this->setOrderEffect(new string(effect));
 //    calling setters to influence friend operator
     this->setExecutable(boolean);
+    this->Notify();
 };
 
 
@@ -674,10 +694,12 @@ void Blockade::execute() {
     bool* boolean = this->validate();
 //    if statement to verify if the order was valid
     if(!*boolean) {
+        this->setOrderEffect(new string("order failed"));
+        this->Notify();
         return;
     }
 //    update targetTerritory's number of armies using the getter and setter methods
-    this->targetTerritory->setNoOfArmies(this->targetTerritory->getNoOfArmies() * 2);
+    this->targetTerritory->setNoOfArmies(new int(this->targetTerritory->getNoOfArmies() * 2));
 //    update targetTerritory's player using the setter method
     this->targetTerritory->setPlayer(playerN);
 
@@ -694,6 +716,7 @@ void Blockade::execute() {
     this->setOrderEffect(new string(effect));
 //    calling setters to influence friend operator
     this->setExecutable(boolean);
+    this->Notify();
 };
 
 
@@ -843,16 +866,19 @@ void Airlift::execute() {
     bool* boolean = this->validate();
 //    if statement to verify if the order was valid
     if(!*boolean) {
+        this->setOrderEffect(new string("order failed"));
+        this->Notify();
         return;
     }
 //    update targetTerritory's number of armies using the getter and setter methods
-    this->targetTerritory->setNoOfArmies(this->targetTerritory->getNoOfArmies() + *this->unitsToSend);
+    this->targetTerritory->setNoOfArmies(new int(this->targetTerritory->getNoOfArmies() + *this->unitsToSend));
 //    calling setter to set orderEffect
     string effect = to_string(*this->unitsToSend) + " armies were airlifted to " + *this->targetName + ". There are now " +
                     to_string(this->targetTerritory->getNoOfArmies()) + " armies.";
     this->setOrderEffect(new string(effect));
 //    calling setters to influence friend operator
     this->setExecutable(boolean);
+    this->Notify();
 };
 
 
@@ -957,11 +983,14 @@ void Negotiate::execute() {
     bool* boolean = this->validate();
 //    if statement to verify if the order was valid
     if(!*boolean) {
+        this->setOrderEffect(new string("order failed"));
+        this->Notify();
         return;
     }
 //    calling setters to influence friend operator
     this->setExecutable(boolean);
     this->setOrderEffect(new string("A negotiation was set in place with " + *this->targetName + "."));
+    this->Notify();
 };
 
 
@@ -969,6 +998,7 @@ void Negotiate::execute() {
 
 
 //////////////////////////////    ORDERSLISTS    //////////////////////////////
+LogObserver* OrdersLists::obs = NULL;
 ///// CONSTRUCTORS
 OrdersLists::OrdersLists() {};
 
@@ -1002,6 +1032,9 @@ void OrdersLists::setOrders(vector<Order*> orders) {
 void OrdersLists::add(Order* order) {
 //    push order to list
     this->orders.push_back(order);
+    if(order!= nullptr) {
+        this->Notify();
+    }
 };
 
 void OrdersLists::remove(int index) {
@@ -1052,7 +1085,7 @@ void OrdersLists::move(int fromIndex, int toIndex) {
 
 void OrdersLists::execute() {
 //    print header
-    cout << "======= ORDERS NOW EXECUTING =======" << endl << endl;
+    cout << endl << endl << "======= ORDERS NOW EXECUTING =======" << endl << endl;
 //    call execute on and print each Order of orders
     for(Order* o : this->orders) {
         o->execute();
@@ -1062,7 +1095,19 @@ void OrdersLists::execute() {
     cout << "===== ORDERS FINISHED EXECUTING =====" << endl << endl << endl << endl << endl;
 }
 
+string OrdersLists::stringToLog() {
+    string orderAdded = "Order: " + *this->getOrders()[this->getListSize() - 1]->getOrderName() + " has been added by player: " + *this->getOrders()[this->getListSize() - 1]->getPlayer()->getName();
+    return orderAdded;
+};
 
+void OrdersLists::Notify() {
+    string orderAdded = this->stringToLog();
+    OrdersLists::obs->update(orderAdded);
+};
+
+void OrdersLists::setObserver(LogObserver* o) {
+    OrdersLists::obs = o;
+}
 
 
 

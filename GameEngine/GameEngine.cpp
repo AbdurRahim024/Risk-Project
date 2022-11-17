@@ -7,6 +7,7 @@
 
 int zeroState = 0;
 int* GameEngine::state = &zeroState;
+LogObserver* GameEngine::obs = NULL;
 
 GameEngine::GameEngine() {
     intToStringState[0] = new string("start");
@@ -88,6 +89,7 @@ unordered_map<int, string *> GameEngine::getIntToStringState() {
 void GameEngine::gameFlow(string userInput) {
     // this method handles state transitions
 
+
     // convert user input from string to int
     int moveInt = userInputToInt(userInput);
 
@@ -111,6 +113,9 @@ void GameEngine::gameFlow(string userInput) {
         // invalid move
         cout << "Invalid move! Try again" << endl << endl;
     }
+
+    transitionLog = new string("New state: " + *intToStringState[*state] + "\n");
+    Notify();
 }
 
 bool GameEngine::validateMove(int move) {
@@ -235,13 +240,11 @@ string* GameEngine::loadMap(string mapName) {
 //    this->gameMap = testMap();
 
     //effect
-    cout << "the map " << mapName << " was loaded into the game engine" << endl;
+    cout << "The map " << mapName << " was loaded into the game engine" << endl;
 
     //transition state
-    string effect = "the map " + mapName + " was loaded into the game engine.\n";
-    effect += "this command transitions the game from " + *intToStringState[*state];
+    string effect = "The map " + mapName + " was loaded into the game engine.\n";
     gameFlow("loadmap");
-    effect += " to " + *intToStringState[*state];
     cout << *this << endl;
     return new string(effect);
 }
@@ -258,10 +261,8 @@ string* GameEngine::validateMap() {
     }
 
     // valid map -> transition state
-    effect += "the game map is valid!\n";
-    effect += "this command transitions the game from " + *intToStringState[*state];
+    effect += "The current game map is valid!\n";
     gameFlow("validatemap");
-    effect += " to " + *intToStringState[*state];
     cout << *this << endl;
     return new string(effect);
 
@@ -273,8 +274,8 @@ string* GameEngine::addPlayer(string* name) {
 
     //check num of players is less than 6
     if (players.size() >= 6) {
-        cout << "too many players!" << endl;
-        effect = "this addplayer command failed because the maximum number of players is reached";
+        cout << "Too many players!" << endl;
+        effect = "This addplayer command failed because the maximum number of players is reached";
         return new string(effect);
     }
 
@@ -287,9 +288,7 @@ string* GameEngine::addPlayer(string* name) {
 
     //transition state
     effect += *name + " was added to the game\n";
-    effect += "this command transitions the game from " + *intToStringState[*state];
     gameFlow("addplayer");
-    effect += " to " + *intToStringState[*state];
     cout << *this << endl;
     return new string(effect);
 }
@@ -300,7 +299,7 @@ string* GameEngine::gameStart() {
 
     //check num of players is less than 6
     if (players.size() < 2) {
-        effect = "this gamestart command failed because there are not enough players to start the game";
+        effect = "This gamestart command failed because there are not enough players to start the game";
         cout << effect << endl;
         return new string(effect);
     }
@@ -331,8 +330,8 @@ string* GameEngine::gameStart() {
     shufflePlayerOrder();
 
     //effect
-    cout << "the game has successfully started\n" << endl;
-    cout << "printing current game data..\n" << endl;
+    cout << "The game has successfully started\n" << endl;
+    cout << "Printing current game data..\n" << endl;
 
     cout << "map info..." << endl;
     cout << *(this->gameMap) << endl;
@@ -343,9 +342,8 @@ string* GameEngine::gameStart() {
     }
 
     //transition state
-    effect = "this command transitions the game from " + *intToStringState[*state];
+    effect = "The game has successfully started\n";
     gameFlow("gamestart");
-    effect += " to " + *intToStringState[*state];
     cout << *this << endl;
     return new string(effect);
 }
@@ -450,10 +448,6 @@ Map* testMap() {
 }
 
 
-
-
-
-
 // MAIN GAME LOOP
 
 // DESTRUCTOR
@@ -535,7 +529,7 @@ OrdersLists* GameEngine::issueOrdersPhase(vector<Player*> listOfPlayers,Map* map
 void executeOrdersPhase(OrdersLists* list){
 //    print header
     cout << "======= ORDERS NOW EXECUTING =======" << endl << endl;
-//    call execute on and print each Order of orders
+//    call execute on and print each order
     for(Order* o : list->getOrders()) {
         o->execute();
         cout << *o;
@@ -544,7 +538,17 @@ void executeOrdersPhase(OrdersLists* list){
     cout << "===== ORDERS FINISHED EXECUTING =====" << endl << endl << endl << endl << endl;
 }
 
+//ILoggable
+void GameEngine::Notify() {
+    string status = this->stringToLog();
+    GameEngine::obs->update(status);
+}
 
+string GameEngine::stringToLog() {
+    return *transitionLog;
+}
 
-
+void GameEngine::setObserver(LogObserver* o) {
+    GameEngine::obs = o;
+}
 
