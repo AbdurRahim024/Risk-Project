@@ -30,6 +30,8 @@ private:
     OrdersLists* orders;
     vector<Territory*> territories;
 
+    PlayerStrategy* ps; //object of PlayerStrategy class
+
     //Part 3 Abdur & Nauar
     int* reinforcements;
     vector<Player*> negotiations;
@@ -82,6 +84,11 @@ public:
     vector<Territory*> toAttack(Territory* source);
     vector<Territory*> toDefend(Territory* source);
     Order* issueOrder(int orderNumber,Map* map);
+
+    //PlayerStragey patterns
+    void issueOrder(ps ->issueOrder);
+    void toAttack(ps->toAttack);
+    void toDefend(ps->toDefend);
 
     // DESTRUCTOR
     ~Player();
