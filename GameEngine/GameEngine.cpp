@@ -6,8 +6,8 @@
 //
 
 int zeroState = 0;
-int* GameEngine::state = &zeroState;
-LogObserver* GameEngine::obs = NULL;
+int *GameEngine::state = &zeroState;
+LogObserver *GameEngine::obs = NULL;
 
 GameEngine::GameEngine() {
     intToStringState[0] = new string("start");
@@ -46,7 +46,7 @@ GameEngine::GameEngine() {
 }
 
 // COPY CONSTRUCTOR
-GameEngine::GameEngine(const GameEngine& ge) {
+GameEngine::GameEngine(const GameEngine &ge) {
     cout << "Copy constructor of Game Engine called" << endl;
     allowedStates = ge.allowedStates;
     intToStringState = ge.intToStringState;
@@ -54,8 +54,7 @@ GameEngine::GameEngine(const GameEngine& ge) {
 }
 
 // ASSIGNMENT OPERATOR
-GameEngine& GameEngine::operator=(const GameEngine& ge)
-{
+GameEngine &GameEngine::operator=(const GameEngine &ge) {
     cout << "Copy assignment operator of Game Engine" << endl;
     this->state = ge.state;
     this->allowedStates = ge.allowedStates;
@@ -64,15 +63,14 @@ GameEngine& GameEngine::operator=(const GameEngine& ge)
 }
 
 // STREAM INSERTION OPERATOR
-ostream& operator <<(ostream& os, GameEngine& ge)
-{
+ostream &operator<<(ostream &os, GameEngine &ge) {
     cout << "current state: " << endl;
-    cout << "<" + *(ge.intToStringState[*ge.state]) + ">"<< endl;
+    cout << "<" + *(ge.intToStringState[*ge.state]) + ">" << endl;
     return os;
 }
 
 // GETTERS
-int* GameEngine::getState() {
+int *GameEngine::getState() {
     return state;
 }
 
@@ -120,7 +118,7 @@ void GameEngine::gameFlow(string userInput) {
 
 bool GameEngine::validateMove(int move) {
     // check that the user's move is part of the allowed moves at a specific state
-    for (int* validMove: allowedStates[*state]) {
+    for (int *validMove: allowedStates[*state]) {
         if (move == *validMove) {
             return true;
         }
@@ -172,19 +170,19 @@ void GameEngine::startupPhase() {
 
     // reading from the console
     if (choice == "-console") {
-        CommandProcessor* cp = new CommandProcessor();
+        CommandProcessor *cp = new CommandProcessor();
 
         //while state isn't in assign reinforcement (first step of play phase)
         while (*state != 4) {
-            Command* command = cp->getCommand();
-            string* effect = execute(command->getCommandString());
+            Command *command = cp->getCommand();
+            string *effect = execute(command->getCommandString());
             command->saveEffect(effect);
         }
 
         cout << "Play phase has begun\n" << endl;
 
         //printing all commands received
-        for (Command* command: cp->getCommandsList()) {
+        for (Command *command: cp->getCommandsList()) {
             cout << *(command->getCommandString()) << endl;
             cout << *(command->getEffect()) << endl << endl;
         }
@@ -192,19 +190,19 @@ void GameEngine::startupPhase() {
 
         // reading from a text file
     else {
-        FileCommandProcessorAdapter* fp = new FileCommandProcessorAdapter();
+        FileCommandProcessorAdapter *fp = new FileCommandProcessorAdapter();
 
         //while state isn't in assign reinforcement (first step of play phase)
         while (*state != 4) {
-            Command* command = fp->passCommand();
-            string* effect = execute(command->getCommandString());
+            Command *command = fp->passCommand();
+            string *effect = execute(command->getCommandString());
             command->saveEffect(effect);
         }
 
         cout << "Play phase has begun\n" << endl;
 
         //printing all commands received
-        for (Command* command: fp->getCommandsList()) {
+        for (Command *command: fp->getCommandsList()) {
             cout << *(command->getCommandString()) << endl;
             cout << *(command->getEffect()) << endl << endl;
         }
@@ -213,9 +211,9 @@ void GameEngine::startupPhase() {
 
 // GAME TRANSITION HELPERS
 
-string* GameEngine::execute(string* command) {
+string *GameEngine::execute(string *command) {
     vector<string> commandElements = split(*command);
-    string* effect;
+    string *effect;
 
     // call appropriate method
     if (commandElements.at(0) == "loadmap") {
@@ -232,9 +230,9 @@ string* GameEngine::execute(string* command) {
 
 }
 
-string* GameEngine::loadMap(string mapName) {
+string *GameEngine::loadMap(string mapName) {
 
-    MapLoader* loader = new MapLoader;
+    MapLoader *loader = new MapLoader;
     this->gameMap = loader->loadMap(mapName);
 
 //    this->gameMap = testMap();
@@ -249,7 +247,7 @@ string* GameEngine::loadMap(string mapName) {
     return new string(effect);
 }
 
-string* GameEngine::validateMap() {
+string *GameEngine::validateMap() {
     string effect = "";
 
     // invalid map
@@ -269,7 +267,7 @@ string* GameEngine::validateMap() {
 }
 
 
-string* GameEngine::addPlayer(string* name) {
+string *GameEngine::addPlayer(string *name) {
     string effect = "";
 
     //check num of players is less than 6
@@ -280,7 +278,7 @@ string* GameEngine::addPlayer(string* name) {
     }
 
     //add new player
-    Player* p = new Player(name);
+    Player *p = new Player(name);
     players.push_back(p);
 
     //effect
@@ -294,7 +292,7 @@ string* GameEngine::addPlayer(string* name) {
 }
 
 
-string* GameEngine::gameStart() {
+string *GameEngine::gameStart() {
     string effect = "";
 
     //check num of players is less than 6
@@ -305,12 +303,12 @@ string* GameEngine::gameStart() {
     }
 
     //init deck
-    Deck* d = new Deck(players);
+    Deck *d = new Deck(players);
 
     //distribute territories to players
-    vector <Territory*> territories = gameMap->getAllTerritories();
+    vector<Territory *> territories = gameMap->getAllTerritories();
 
-    for(int i = 0; i < players.size(); i++) {
+    for (int i = 0; i < players.size(); i++) {
 
         //evenly assign territories to players
         for (int j = i; j < territories.size(); j += players.size()) {
@@ -337,7 +335,7 @@ string* GameEngine::gameStart() {
     cout << *(this->gameMap) << endl;
 
     cout << "\nplayer info... " << endl;
-    for (Player* p : players) {
+    for (Player *p: players) {
         cout << *p << endl;
     }
 
@@ -357,11 +355,11 @@ void GameEngine::shufflePlayerOrder() {
         srand(time(nullptr)); // a new set of random numbers is generated
 
         //indices to swap
-        int randomIndex1 = rand() % (numOfPlayers-1);
-        int randomIndex2 = rand() % (numOfPlayers-1);
+        int randomIndex1 = rand() % (numOfPlayers - 1);
+        int randomIndex2 = rand() % (numOfPlayers - 1);
 
         //swap
-        Player* tmp = players.at(randomIndex1);
+        Player *tmp = players.at(randomIndex1);
         players.at(randomIndex1) = players.at(randomIndex2);
         players.at(randomIndex2) = tmp;
     }
@@ -381,7 +379,7 @@ vector<string> GameEngine::split(string cmd) {
         command = cmd.substr(0, pos);
         elements.push_back(command);
         cmd.erase(0, pos + delimiter.length());
-        name = cmd.substr(0, pos+1);
+        name = cmd.substr(0, pos + 1);
         elements.push_back(name);
 
         break;
@@ -392,20 +390,21 @@ vector<string> GameEngine::split(string cmd) {
 
     return elements;
 }
-Map* testMap() {
 
-    Map* m = new Map();
+Map *testMap() {
 
-    Continent* af = new Continent(new string("AFRICA"), new int (5));
-    Territory* kenya = new Territory(new string("KENYA"), af);
-    Territory* ethiopia = new Territory(new string("ETHIOPIA"), af);
-    Territory* sudan = new Territory(new string("SUDAN"), af);
+    Map *m = new Map();
+
+    Continent *af = new Continent(new string("AFRICA"), new int(5));
+    Territory *kenya = new Territory(new string("KENYA"), af);
+    Territory *ethiopia = new Territory(new string("ETHIOPIA"), af);
+    Territory *sudan = new Territory(new string("SUDAN"), af);
 
 
-    Continent* as = new Continent(new string("ASIA"), new int (6));
-    Territory* india = new Territory(new string("INDIA"), as);
-    Territory* pakistan = new Territory(new string("PAKISTAN"), as);
-    Territory* china = new Territory(new string("CHINA"), as);
+    Continent *as = new Continent(new string("ASIA"), new int(6));
+    Territory *india = new Territory(new string("INDIA"), as);
+    Territory *pakistan = new Territory(new string("PAKISTAN"), as);
+    Territory *china = new Territory(new string("CHINA"), as);
 
     af->setListofTerritories(kenya);
     af->setListofTerritories(ethiopia);
@@ -453,7 +452,7 @@ Map* testMap() {
 // DESTRUCTOR
 GameEngine::~GameEngine() {
     for (auto entry: allowedStates) {
-        for (int* n : entry.second) {
+        for (int *n: entry.second) {
             delete n;
             n = nullptr;
         }
@@ -465,7 +464,7 @@ GameEngine::~GameEngine() {
     }
 }
 
-void mainGameLoop(){
+void mainGameLoop() {
     //first phase of game loop is to calculate number of reinforcement armies
     //reinforcementPhase();
     //if listOfPlayers is equal to 1 call end game screen
@@ -474,7 +473,7 @@ void mainGameLoop(){
 
 //This method will loop over all the continents and check if a player owns all the territories in the particular continent
 // and return the total bonus value added to players' reinforceement pool
-int GameEngine::continentBonus(Player* player, Map* map) {
+int GameEngine::continentBonus(Player *player, Map *map) {
     int totalBonus = 0;
     for (int i = 0; i < map->getSubgraph().size(); ++i) {
         bool getsTheBonus = true;
@@ -493,28 +492,25 @@ int GameEngine::continentBonus(Player* player, Map* map) {
 }
 
 //This method assigns reinforcements to each player depending on the number of territories owned along with the bonus value if any
-void GameEngine::reinforcementPhase(vector<Player*> listOfPlayers,Map* map){
+void GameEngine::reinforcementPhase(vector<Player *> listOfPlayers, Map *map) {
     for (int i = 0; i < listOfPlayers.size(); ++i) {
         int reinforcements = 3;
-        if(listOfPlayers[i]->getTerritories().size()==0){
-            //remove player from the game, from the list of players as well
-        }else {
-            int territoryValue = listOfPlayers[i]->getTerritories().size();
-            territoryValue = territoryValue / 3;
-            int bonusValue = continentBonus(listOfPlayers[i], map);
-            if (reinforcements < territoryValue + bonusValue) {
-                reinforcements = territoryValue + bonusValue;
-            }
-//            int *reinforcementPointer = &reinforcements; //might mess up
-            listOfPlayers[i]->setReinforcements(reinforcements);
+        int territoryValue = listOfPlayers[i]->getTerritories().size();
+        territoryValue = territoryValue / 3;
+        int bonusValue = continentBonus(listOfPlayers[i], map);
+        if (reinforcements < territoryValue + bonusValue) {
+            reinforcements = territoryValue + bonusValue;
         }
+//            int *reinforcementPointer = &reinforcements; //might mess up
+        listOfPlayers[i]->setReinforcements(reinforcements);
     }
 }
 
 
+
 // This method created orders using the issue order method and pushes the orders into the orders list
-OrdersLists* GameEngine::issueOrdersPhase(vector<Player*> listOfPlayers,Map* map) {
-    OrdersLists* list = new OrdersLists();
+OrdersLists *GameEngine::issueOrdersPhase(vector<Player *> listOfPlayers, Map *map) {
+    OrdersLists *list = new OrdersLists();
     //print out all the options
     //attempt to call something other than deploy, fail
     list->add(listOfPlayers[0]->issueOrder(1, map));
@@ -526,11 +522,11 @@ OrdersLists* GameEngine::issueOrdersPhase(vector<Player*> listOfPlayers,Map* map
     return list;
 }
 
-void executeOrdersPhase(OrdersLists* list){
+void executeOrdersPhase(OrdersLists *list) {
 //    print header
     cout << "======= ORDERS NOW EXECUTING =======" << endl << endl;
 //    call execute on and print each order
-    for(Order* o : list->getOrders()) {
+    for (Order *o: list->getOrders()) {
         o->execute();
         cout << *o;
     }
@@ -548,7 +544,7 @@ string GameEngine::stringToLog() {
     return *transitionLog;
 }
 
-void GameEngine::setObserver(LogObserver* o) {
+void GameEngine::setObserver(LogObserver *o) {
     GameEngine::obs = o;
 }
 
