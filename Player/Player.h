@@ -2,6 +2,7 @@
 #include "Cards.h"
 #include "map.h"
 #include "Orders.h"
+#include "PlayerStrategies.h"
 //#include "../Orders/Orders.h"
 #include <iostream>
 #include <vector>
@@ -15,6 +16,7 @@ class Territory;
 class Map;
 class OrdersLists;
 class Order;
+class PlayerStrategies;
 
 ///////////////////////////////// PLAYER /////////////////////////////////////
 
