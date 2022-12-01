@@ -64,7 +64,7 @@ public:
     //we are passing a continent pointer to set the continent name when territory found is true
     void setContinent(Continent *continent);
     void setNoOfArmies(int* noOfArmies);        // a: changed to pointer
-    void setPlayerName(string playerName);
+    //void setPlayerName(string playerName);
 
     // constructors for Territory class
     Territory();

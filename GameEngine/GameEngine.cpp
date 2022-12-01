@@ -509,16 +509,13 @@ void GameEngine::reinforcementPhase(vector<Player *> listOfPlayers, Map *map) {
 
 
 // This method created orders using the issue order method and pushes the orders into the orders list
-OrdersLists *GameEngine::issueOrdersPhase(vector<Player *> listOfPlayers, Map *map) {
+OrdersLists *GameEngine::issueOrdersPhase(vector<Player *> listOfPlayers) {
     OrdersLists *list = new OrdersLists();
-    //print out all the options
-    //attempt to call something other than deploy, fail
-    list->add(listOfPlayers[0]->issueOrder(1, map));
-    //call deploy until reinforcements are exhausted
-    list->add(listOfPlayers[0]->issueOrder(0, map));
-    list->add(listOfPlayers[0]->issueOrder(1, map));
-    list->add(listOfPlayers[0]->issueOrder(2, map));
-    list->add(listOfPlayers[0]->issueOrder(3, map));
+    for (int i = 0; i < listOfPlayers.size(); ++i) {
+        for (int j = 0; j < listOfPlayers[i]->issueOrder().size(); ++j) {
+            list->add(listOfPlayers[i]->issueOrder()[j]);
+        }
+    }
     return list;
 }
 

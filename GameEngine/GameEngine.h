@@ -13,6 +13,9 @@ using namespace std;
 class Observer; //dom added
 class LogObserver;
 class ILoggable;
+class Map;
+class OrdersLists;
+
 
 class GameEngine: public Subject, public ILoggable{
 private:
@@ -69,7 +72,7 @@ public:
     //Part 3 Abdur & Nauar
     void mainGameLoop();
     void reinforcementPhase(vector<Player*> listOfPlayers,Map* map);
-    OrdersLists* issueOrdersPhase(vector<Player*> listOfPlayers,Map* map);
+    OrdersLists* issueOrdersPhase(vector<Player*> listOfPlayers);
     void executeOrdersPhase(OrdersLists* list );
     int continentBonus(Player* player, Map* map);
 

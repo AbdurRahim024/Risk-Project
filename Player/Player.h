@@ -16,7 +16,7 @@ class Territory;
 class Map;
 class OrdersLists;
 class Order;
-class PlayerStrategies;
+class PlayerStrategy;
 
 ///////////////////////////////// PLAYER /////////////////////////////////////
 
@@ -30,13 +30,16 @@ private:
     OrdersLists* orders;
     vector<Territory*> territories;
 
-    PlayerStrategy* ps; //object of PlayerStrategy class
+
 
     //Part 3 Abdur & Nauar
     int* reinforcements;
     vector<Player*> negotiations;
     bool* receivedCard;
     // Note for future assignment: negotiations and receivedCard will need to be reset at each round
+
+    //Part 4
+    PlayerStrategy* ps; //object of PlayerStrategy class
 
 public:
     // CONSTRUCTOR
@@ -73,11 +76,18 @@ public:
     void setOrders(OrdersLists* newOrders);
     void setTerritories(vector<Territory*> newTerritories);
 
+
     //Part 3 Abdur & Nauar
     void setReinforcements(int noOfReinforcements);
 
     void setNegotiations(vector<Player*> negotiations);
     void setReceivedCard(bool* boolean);
+
+    //Part 4
+    void removeTerritory(Territory* removeTerr);
+    void setPlayerStrategy(PlayerStrategy* playerStrategy);
+    PlayerStrategy* getPlayerStrategy();
+
 
     // OTHER
     void addTerritory(Territory* newTerr);
@@ -86,9 +96,9 @@ public:
     Order* issueOrder(int orderNumber,Map* map);
 
     //PlayerStragey patterns
-    void issueOrder(ps ->issueOrder);
-    void toAttack(ps->toAttack);
-    void toDefend(ps->toDefend);
+//    void issueOrder(ps->issueOrder);
+//    void toAttack(ps->toAttack);
+//    void toDefend(ps->toDefend);
 
     // DESTRUCTOR
     ~Player();

@@ -5,6 +5,9 @@
 #include "Orders.h"
 #include <iostream>
 
+class Order;
+class Territory;
+
 class PlayerStrategy {
 private:
     Player* p;
@@ -28,7 +31,7 @@ public:
 
     //methods
     Player* getPlayer();
-    Player* setPlayer(Player* player);
+    void setPlayer(Player* player);
     virtual vector<Order*> issueOrder() = 0;
     virtual Territory* toAttack() = 0;
     virtual Territory* toDefend() = 0;
@@ -37,10 +40,11 @@ public:
 class HumanPlayerStrategy: public PlayerStrategy {
 private:
     static LogObserver* obs;
+    Map* map;
 public:
     //constructors
     HumanPlayerStrategy();
-    HumanPlayerStrategy(Player* player);
+    HumanPlayerStrategy(Player* player, Map* map);
 
     //copy consturctor
     HumanPlayerStrategy(HumanPlayerStrategy &humanstrat);
@@ -56,8 +60,8 @@ public:
 
     //methods
     vector<Order*> issueOrder();
-    Territory* toAttack(string attackCountry);
-    Territory* toDefend(string deployCountry);
+    Territory* toAttack();
+    Territory* toDefend();
 
 };
 
