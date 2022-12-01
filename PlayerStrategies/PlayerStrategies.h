@@ -87,7 +87,7 @@ public:
 
     //methods
     vector<Order*> issueOrder();
-    Territory* toAttack(Territory* territory);
+    Territory* toAttack();
     Territory* toDefend();
 };
 

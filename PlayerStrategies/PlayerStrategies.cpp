@@ -275,7 +275,8 @@ vector<Order*> AggressivePlayerStrategy::issueOrder() {
     aggressiveOrders.push_back(advance);
     return aggressiveOrders;
 }
-Territory* AggressivePlayerStrategy::toAttack(Territory* territory) {
+
+Territory* AggressivePlayerStrategy::toAttack() {
     //variable called terrritoryToAtk
     Territory* territory = this->toDefend();
     string toDefendResult = territory->getTerritoryName();
@@ -391,7 +392,7 @@ CheaterPlayerStrategy::CheaterPlayerStrategy() {
 }
 
 CheaterPlayerStrategy::CheaterPlayerStrategy(Player *player) {
-
+    this->setPlayer(player);
 }
 
 CheaterPlayerStrategy::~CheaterPlayerStrategy() {

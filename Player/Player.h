@@ -91,9 +91,9 @@ public:
 
     // OTHER
     void addTerritory(Territory* newTerr);
-    vector<Territory*> toAttack(Territory* source);
-    vector<Territory*> toDefend(Territory* source);
-    Order* issueOrder(int orderNumber,Map* map);
+//    vector<Territory*> toAttack(Territory* source);
+//    vector<Territory*> toDefend(Territory* source);
+    vector<Order*> issueOrder();
 
     //PlayerStragey patterns
 //    void issueOrder(ps->issueOrder);
