@@ -56,7 +56,7 @@ public:
     HumanPlayerStrategy& operator=(const HumanPlayerStrategy &human);
 
     //destructor
-    ~HumanPlayerStrategy();
+    //~HumanPlayerStrategy();
 
     //methods
     vector<Order*> issueOrder();

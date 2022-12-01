@@ -190,6 +190,28 @@ vector<Order*> Player::issueOrder() {
     return this->ps->issueOrder();
 }
 
+void Player::removeTerritory(Territory* removeTerr) {
+    vector<Territory*> territorySet;
+    string sadas = removeTerr->getTerritoryName();
+     for (int i = 0; i < this->territories.size(); ++i) {
+        string gog = this->territories[i]->getTerritoryName();
+        if(this->territories[i] != removeTerr){
+            territorySet.push_back(this->territories[i]);
+        }
+    }    this->setTerritories(territorySet);
+}
+
+void Player::setPlayerStrategy(PlayerStrategy* playerStrategy){
+    this->ps = playerStrategy;
+}
+PlayerStrategy* Player::getPlayerStrategy(){
+    return this->ps;
+}
+
+
+
+
+
 
 Player::~Player() {
     delete id;

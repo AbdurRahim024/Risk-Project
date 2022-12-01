@@ -2,9 +2,9 @@
 #include <iostream>
 using namespace std;
 
-class LogObserver;
-LogObserver* Command::obs = NULL;
-LogObserver* CommandProcessor ::obs = NULL;
+//class LogObserver;
+//LogObserver* Command::obs = NULL;
+//LogObserver* CommandProcessor ::obs = NULL;
 
 //----------------OVERLOADING INSERTION STREAM OPERATORS------------------
 
@@ -270,7 +270,7 @@ vector<Order*> AggressivePlayerStrategy::issueOrder() {
             aggressiveOrders.push_back(bomb);
         }
     }
-    int strongestNoOfArmies = strongestOwnedTerritory->getNoOfArmies();
+    int strongestNoOfArmies = strongestOwnedTerritory->getNoOfArmies() + allReinforcements; //order to advance with current armies + reinforcement order needs to be checked when orders are executed
     Order* advance = new Advance(&strongestNoOfArmies,&weakestTerritoryName,&strongestTerritoryName,this->getPlayer());
     aggressiveOrders.push_back(advance);
     return aggressiveOrders;
@@ -379,11 +379,11 @@ vector<Order*> NeutralPlayerStrategy::issueOrder() {
 }
 
 Territory* NeutralPlayerStrategy::toAttack() {
-
+    return nullptr;
 }
 
 Territory* NeutralPlayerStrategy::toDefend() {
-
+    return nullptr;
 }
 
 //Cheater
@@ -421,7 +421,7 @@ vector<Order*> CheaterPlayerStrategy::issueOrder() {
     return emptyOrders;
 }
 Territory* CheaterPlayerStrategy::toAttack() {
-//loop through countries adjacent to territories he owns and make them his
+    return nullptr;
 }
 Territory* CheaterPlayerStrategy::toDefend() {
     return nullptr;
