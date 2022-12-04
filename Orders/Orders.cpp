@@ -5,12 +5,6 @@ using namespace std;
 
 
 
-///// to do add notify and stringToLog when part 5 is set up
-///// to do double check calling parent (check all copy constructors)
-///// to do finish testing and cleaning
-///// to do github
-
-
 LogObserver* Order::obs = NULL;
 //////////////////////////////    ORDER    //////////////////////////////
 ///// CONSTRUCTORS
@@ -1082,18 +1076,6 @@ void OrdersLists::move(int fromIndex, int toIndex) {
     this->remove(fromIndex);
     this->orders.insert(this->orders.begin() + toIndex, Order::createSubtype(order));
 };
-
-void OrdersLists::execute() {
-//    print header
-    cout << endl << endl << "======= ORDERS NOW EXECUTING =======" << endl << endl;
-//    call execute on and print each Order of orders
-    for(Order* o : this->orders) {
-        o->execute();
-        cout << *o;
-    }
-//    print footer
-    cout << "===== ORDERS FINISHED EXECUTING =====" << endl << endl << endl << endl << endl;
-}
 
 string OrdersLists::stringToLog() {
     string orderAdded = "Order: " + *this->getOrders()[this->getListSize() - 1]->getOrderName() + " has been added by player: " + *this->getOrders()[this->getListSize() - 1]->getPlayer()->getName();

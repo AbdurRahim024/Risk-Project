@@ -30,13 +30,10 @@ private:
     OrdersLists* orders;
     vector<Territory*> territories;
 
-
-
     //Part 3 Abdur & Nauar
     int* reinforcements;
     vector<Player*> negotiations;
     bool* receivedCard;
-    // Note for future assignment: negotiations and receivedCard will need to be reset at each round
 
     //Part 4
     PlayerStrategy* ps; //object of PlayerStrategy class
@@ -76,10 +73,8 @@ public:
     void setOrders(OrdersLists* newOrders);
     void setTerritories(vector<Territory*> newTerritories);
 
-
     //Part 3 Abdur & Nauar
     void setReinforcements(int noOfReinforcements);
-
     void setNegotiations(vector<Player*> negotiations);
     void setReceivedCard(bool* boolean);
 
@@ -94,6 +89,8 @@ public:
 //    vector<Territory*> toAttack(Territory* source);
 //    vector<Territory*> toDefend(Territory* source);
     vector<Order*> issueOrder();
+    void resetRoundInfo();      // A3 P2 Amanda
+    bool* hasTerritories();     // A3 P2 Amanda
 
     //PlayerStragey patterns
 //    void issueOrder(ps->issueOrder);

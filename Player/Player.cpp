@@ -208,6 +208,24 @@ PlayerStrategy* Player::getPlayerStrategy(){
     return this->ps;
 }
 
+void Player::resetRoundInfo() {         // A3 P2 Amanda
+    this->receivedCard = new bool(false);
+    for(Player* player : this->negotiations) {
+        this->negotiations.pop_back();
+    }
+};
+
+bool* Player::hasTerritories() {
+    int count = 0;
+    for(Territory* territory : this->territories) {
+        count++;
+    }
+    if(count == 0) {
+        return new bool(false);
+    }
+    return new bool(true);
+};
+
 
 
 

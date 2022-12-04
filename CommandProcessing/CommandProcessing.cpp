@@ -10,6 +10,9 @@
 using namespace std;
 
 class LogObserver;
+class Tournament;
+class PlayerStrategy;
+class Player;
 
 int zro = 0;
 int* FileCommandProcessorAdapter::counter = &zro;
@@ -76,6 +79,7 @@ string CommandProcessor::readCommand() {
     cout << "Enter your command: " <<endl;
     string command;
     getline(cin, command);
+
     return command;
 };
 void CommandProcessor::Notify() {
@@ -107,6 +111,22 @@ Command* CommandProcessor::getCommand(){
 
         Command* coms = saveCommand(new string(c),new string (effect));
 
+        //check command is tournament, if so return early
+        vector<string> inputArr = Tournament::tokenize(c, ' ');
+
+        if (inputArr[0] == "tournament") {
+            string isValidTournament = Tournament::tournamentStrValidate(inputArr);
+
+            if(isValidTournament != "valid") {
+                cout << isValidTournament << endl;
+                coms->saveEffect(new string (isValidTournament));
+                continue;
+            }
+            else {
+                return coms;
+            }
+        }
+
         //if it's a valid command, the loop will terminate and the effect is saved in the GameEngine
         //else reporting to the user they have entered an invalid move at that stage of the game, saved the input as an invalid move
         if (validate(c)){
@@ -121,6 +141,7 @@ Command* CommandProcessor::getCommand(){
         return coms;
     }
 }
+
 //validate method to ensure the user is entering and following the correct schema of the game
 //game engine called to retrieve game state for comparison
 bool CommandProcessor::validate(string command) {
@@ -304,7 +325,180 @@ void FileLineReader::readLineFromFile() {
 
 
 
+Tournament::Tournament(vector<string> gameInfo) {
+    this->tournamentData = "-------------RISK TOURNAMENT------------\n\n";
 
+    //set maps
+    vector<string> m = tokenize(gameInfo[2], ',');
+    vector<string*> mPtr;
+    for(string s : m) {
+        mPtr.push_back(new string(s));
+    }
+    this->maps = mPtr;
+    this->tournamentData += "Tournament Maps : ";
+    for(int i = 0; i < m.size(); i++) {
+        this->tournamentData += m[i] + "; ";
+    }
+    this->tournamentData += "\n";
 
+    //set player strategies
+    vector<string> players = tokenize(gameInfo[4], ',');
+    this->tournamentData += "Players : ";
+    vector<PlayerStrategy*> ps;
+    for(int i = 0; i < players.size(); i++) {
+        string name = players[i] + to_string(i);
+        Player* p = new Player(new string(name));
+
+        if (players[i] == "aggressive") {
+            ps.push_back(new AggressivePlayerStrategy(p));
+        }
+        else if (players[i] == "neutral") {
+            ps.push_back(new NeutralPlayerStrategy(p));
+        }
+        else if (players[i] == "benevolent") {
+            ps.push_back(new BenevolentPlayerStrategy(p));
+        }
+        else if (players[i] == "cheater") {
+            ps.push_back(new CheaterPlayerStrategy(p));
+        }
+
+        this->tournamentData += name + "; ";
+    }
+    this->playerStrategies = ps;
+    this->tournamentData += "\n";
+
+    //set numgames
+    this->tournamentData += "Number of games per map: " + gameInfo[6] + "\n";
+    int numG = stoi(gameInfo[6]);
+    this->numOfGames = new int(numG);
+
+    //set numturns
+    this->tournamentData += "Number of turns per game: " + gameInfo[8] + "\n";
+    int numT = stoi(gameInfo[8]);
+    this->numOfTurns = new int(numT);
+
+    this->tournamentData += "\n\nFINAL RESULTS\n\n";
+}
+
+vector<PlayerStrategy*> Tournament::getPlayerStrategies() {
+    return this->playerStrategies;
+}
+
+vector<string*> Tournament::getMaps(){
+    return this->maps;
+}
+int* Tournament::getNumOfGames(){
+    return this->numOfGames;
+}
+int* Tournament::getNumOfTurns(){
+    return this->numOfTurns;
+}
+
+void Tournament::setPlayerStrategies(vector<PlayerStrategy*> ps){
+    this->playerStrategies = ps;
+}
+void Tournament::setMaps(vector<string*> m){
+    this->maps = m;
+}
+void Tournament::setNumOfGames(int num){
+    this->numOfGames = new int(num);
+}
+void Tournament::setNumOfTurns(int num){
+    this->numOfTurns = new int(num);
+}
+
+void Tournament::addGameStat(string map, int gameNumber, string winner) {
+    this->tournamentData += map + " || " + to_string(gameNumber) + " - winner: " + winner + "\n";
+}
+
+void Tournament::printGameData() {
+
+    //create output file and write to it
+    ofstream f;
+    f.open("tournamentdata.txt");
+//    ofstream f("tournamentdata.txt");
+    f << this->tournamentData;
+    f.close();
+}
+
+string Tournament::tournamentStrValidate(vector<string> inputArr) {
+    string message = "valid";
+
+    //check size
+    if(inputArr.size() != 9) {
+        message = "invalid tournament input";
+        return message;
+    }
+
+    // check info
+    if(inputArr[1] != "-M" || inputArr[3] != "-P" || inputArr[5] != "-G" || inputArr[7] != "-D") {
+        message = "invalid tournament input";
+        return message;
+    }
+
+    // check num of maps is between 1 and 5
+    vector<string> maps = tokenize(inputArr[2], ',');
+    if (maps.size() < 1 || maps.size() > 5) {
+        message = "invalid number of tournament maps";
+        return message;
+    }
+
+    // check num of players is between 2 and 4 and players are valid strategy
+    vector<string> players = tokenize(inputArr[4], ',');
+    if (players.size() < 2 || players.size() > 4) {
+        message = "invalid number of tournament players";
+        return message;
+    }
+
+    for(int i = 0; i < players.size(); i++) {
+        if (players[i] != "aggressive" && players[i] != "benevolent" && players[i] != "cheater" && players[i] != "neutral") {
+            message = "invalid player types";
+            return message;
+        }
+    }
+
+    // check num of games is between 1 and 5
+    try {
+        int numOfGames = stoi(inputArr[6]);
+        if(numOfGames < 1 || numOfGames > 5) {
+            message = "invalid number of tournament games";
+            return message;
+        }
+    }
+    catch(int n) {
+        message = "invalid input for number of games";
+        return message;
+    }
+
+    // check num of turns is between 10 and 50
+    try {
+        int numOfTurns = stoi(inputArr[8]);
+        if (numOfTurns < 10 || numOfTurns > 50) {
+            message = "invalid number of game turns";
+            return message;
+        }
+    }
+    catch (int n) {
+        message = "invalid input for number of game turns";
+        return message;
+    }
+
+    return message;
+
+}
+
+vector<string> Tournament::tokenize(string str, char delim)
+{
+    vector<string> out;
+
+    // construct a stream from the string
+    stringstream ss(str);
+
+    string s;
+    while (getline(ss, s, delim)) {
+        out.push_back(s);
+    }
+    return out;
+}
 
 

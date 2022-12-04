@@ -1,0 +1,13 @@
+Command: tournament -M Asia.map,NY.map -P aggressive,benevolent,neutral,cheater -G 2 -D 10 has been added.
+New state: map loaded
+
+New state: map validated
+
+New state: map validated
+
+Order: DEPLOY has been added by player: aggressive0
+Order: ADVANCE has been added by player: aggressive0
+Order: DEPLOY has been added by player: benevolent1
+The order: DEPLOY has taken effect: order failed
+The order: ADVANCE has taken effect: order failed
+The order: DEPLOY has taken effect: order failed

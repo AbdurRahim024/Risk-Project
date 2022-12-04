@@ -35,6 +35,7 @@ HumanPlayerStrategy::HumanPlayerStrategy(){
 }
 HumanPlayerStrategy::HumanPlayerStrategy(Player* player, Map* map){
     this->setPlayer(player);
+    player->setPlayerStrategy(this);
     this->map = map;
 }
 //HumanPlayerStrategy::~HumanPlayerStrategy() {
@@ -297,6 +298,7 @@ AggressivePlayerStrategy::AggressivePlayerStrategy() {
 }
 AggressivePlayerStrategy::AggressivePlayerStrategy(Player *player) {
     this->setPlayer(player);
+    player->setPlayerStrategy(this);
 }
 
 AggressivePlayerStrategy::~AggressivePlayerStrategy() {
@@ -373,6 +375,7 @@ BenevolentPlayerStrategy::BenevolentPlayerStrategy() {
 
 BenevolentPlayerStrategy::BenevolentPlayerStrategy(Player *player) {
     this->setPlayer(player);
+    player->setPlayerStrategy(this);
 }
 
 BenevolentPlayerStrategy::~BenevolentPlayerStrategy() {
@@ -397,13 +400,13 @@ Territory* BenevolentPlayerStrategy::toAttack() {
 
 Territory* BenevolentPlayerStrategy::toDefend() {
     //variable called weakestOwned
-    Territory* weakestOwned = new Territory();
+    Territory* weakestOwned = this->getPlayer()->getTerritories()[0];
     //variable with min number of armies, initially set to territory[0]
     int minNumOfArmies = this->getPlayer()->getTerritories()[0]->getNoOfArmies();
     //loop through all my owned territories
     //if bigger, set new max number and set new strongestOwned
     for (int i = 0; i < this->getPlayer()->getTerritories().size(); ++i) {
-        if(this->getPlayer()->getTerritories()[i]->getNoOfArmies()<minNumOfArmies && *this->getPlayer()->getName() == this->getPlayer()->getTerritories()[i]->getPlayerName()){
+        if(this->getPlayer()->getTerritories()[i]->getNoOfArmies()<minNumOfArmies){
             minNumOfArmies = this->getPlayer()->getTerritories()[i]->getNoOfArmies();
             weakestOwned = this->getPlayer()->getTerritories()[i];
         }
@@ -418,6 +421,7 @@ NeutralPlayerStrategy::NeutralPlayerStrategy() {
 
 NeutralPlayerStrategy::NeutralPlayerStrategy(Player *player) {
     this->setPlayer(player);
+    player->setPlayerStrategy(this);
     this->noOfTerritories = new int(this->getPlayer()->getTerritories().size());
 }
 
@@ -451,6 +455,7 @@ CheaterPlayerStrategy::CheaterPlayerStrategy() {
 
 CheaterPlayerStrategy::CheaterPlayerStrategy(Player *player) {
     this->setPlayer(player);
+    player->setPlayerStrategy(this);
 }
 
 CheaterPlayerStrategy::~CheaterPlayerStrategy() {

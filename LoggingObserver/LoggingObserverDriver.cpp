@@ -30,6 +30,6 @@ void testLogObserver() {
     obs = nullptr;
 }
 
-int main() {
-    testLogObserver();
-}
+//int main() {
+//    testLogObserver();
+//}
