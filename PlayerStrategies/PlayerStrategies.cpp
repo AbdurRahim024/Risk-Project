@@ -43,6 +43,10 @@ HumanPlayerStrategy::HumanPlayerStrategy(Player* player, Map* map){
 
 vector<Order*> HumanPlayerStrategy::issueOrder() {
     vector<Order*> humanOrders;
+    vector<int> localTroops;
+    for (int i = 0; i < this->getPlayer()->getTerritories().size(); ++i) {
+        localTroops.push_back(this->getPlayer()->getTerritories()[i]->getNoOfArmies());
+    }
     while(*this->getPlayer()->getReinforcements()>0) {
         cout << "You have: " << *this->getPlayer()->getReinforcements() << " reinforcements in your reinforcement pool"<< endl;
         cout << "Where would you like to deploy?" << endl;
@@ -60,9 +64,14 @@ vector<Order*> HumanPlayerStrategy::issueOrder() {
         }
         else {
             int currentReinforcements = (*this->getPlayer()->getReinforcements())-armiesToDeploy;
-            cout << "Your have ordered to deploy " << armiesToDeploy << " onto " << deployCountry << endl;
+            cout << "Your have ordered to DEPLOY " << armiesToDeploy << " onto " << deployCountry << endl;
             Order *deploy = new Deploy(&armiesToDeploy, &deployCountry, this->getPlayer());
             humanOrders.push_back(deploy);
+            for (int i = 0; i < this->getPlayer()->getTerritories().size(); ++i) {
+                if(this->getPlayer()->getTerritories()[i]->getTerritoryName() == deployCountry){
+                    localTroops[i] += armiesToDeploy;
+                }
+            }
             this->getPlayer()->setReinforcements(currentReinforcements);
         }
     }
@@ -102,7 +111,13 @@ vector<Order*> HumanPlayerStrategy::issueOrder() {
                     }
                 }
                 string target = targetTerr->getTerritoryName();
-                cout << "How many armies would you like to send. You have: " <<sc->getNoOfArmies()<< endl;
+                int noOfArmies;
+                for (int i = 0; i < this->getPlayer()->getTerritories().size(); ++i) {
+                    if(sc == this->getPlayer()->getTerritories()[i]){
+                        noOfArmies = localTroops[i];
+                    }
+                }
+                cout << "How many armies would you like to send. You have: " <<noOfArmies<< endl;
                 int num;
                 cin >> num;
                 Order *advance = new Advance(&num, &target, &source, this->getPlayer());
@@ -121,16 +136,17 @@ vector<Order*> HumanPlayerStrategy::issueOrder() {
                     switch (cardChoice.size()) {
                         case 4: {
                             //BOMB
-                            cout << "You've chosen to " << cardChoice << endl;
+                            cout << "You've chosen to BOMB" << endl;
                             Territory *bombed = toAttack();
                             string bombTarget = bombed->getTerritoryName();
                             Order *bomb = new Bomb(&bombTarget, this->getPlayer());
                             humanOrders.push_back(bomb);
+                            cout<<"Player: "<<*this->getPlayer()->getName()<<" has chosen to BOMB "<<bombTarget<<endl;
                             break;
                         }
                         case 7: {
                             //AIRLIFT
-                            cout << "You have chosen to " << cardChoice << endl;
+                            cout << "You have chosen to AIRLIFT"<< endl;
                             cout << "These are your territories: " << endl;
                             for (int i = 0; i < this->getPlayer()->getTerritories().size(); ++i) {
                                 cout << i + 1 << ". " << this->getPlayer()->getTerritories()[i]->getTerritoryName()
@@ -172,7 +188,7 @@ vector<Order*> HumanPlayerStrategy::issueOrder() {
                         }
                         case 8: {
                             //BLOCKADE
-                            cout << "You have chose to " << cardChoice << endl;
+                            cout << "You have chosen to BLOCKADE"<< endl;
                             cout << "These are your territories: " << endl;
                             for (int i = 0; i < this->getPlayer()->getTerritories().size(); ++i) {
                                 cout << i + 1 << ". " << this->getPlayer()->getTerritories()[i]->getTerritoryName()
@@ -187,6 +203,39 @@ vector<Order*> HumanPlayerStrategy::issueOrder() {
                         }
                         case 9: {
                             //NEGOTIATE
+                            //look through all territories adding all new players (that aren't the current player) to a vector of all player
+                            cout << "You have chose to NEGOTIATE" << endl;
+                            vector<Player*> enemyPlayers;
+                            enemyPlayers.push_back(this->getPlayer());
+                            for (int i = 0; i < map->getAllTerritories().size(); ++i) {
+                                bool add = true;
+                                for (int j = 0; j < enemyPlayers.size(); ++j) {
+                                    if(*enemyPlayers[j]->getName() == map->getAllTerritories()[i]->getPlayerName() || map->getAllTerritories()[i]->getPlayerName()==*this->getPlayer()->getName()){
+                                        add = false;
+                                        break;
+                                    }
+                                }
+                                if(add){
+                                    enemyPlayers.push_back(map->getAllTerritories()[i]->getPlayer());
+                                }
+                            }
+                            enemyPlayers.erase(enemyPlayers.begin());
+                            cout<<"Choose a player to negotiate with: "<<endl;
+                            for (int i = 0; i < enemyPlayers.size(); ++i) {
+                                cout<<i+1<<". "<<*enemyPlayers[i]->getName()<<endl;
+                            }
+                            int playerNumChoice;
+                            cin>>playerNumChoice;
+                            Player* negotiatePartner;
+                            for (int i = 0; i < enemyPlayers.size(); ++i) {
+                                if(i+1 == playerNumChoice){
+                                    negotiatePartner = enemyPlayers[i];
+                                }
+                            }
+                            string negotiatePartnerName = *negotiatePartner->getName();
+                            Order* negotiateOrder = new Negotiate(&negotiatePartnerName,this->getPlayer());
+                            humanOrders.push_back(negotiateOrder);
+                            cout<<"Player: "<< *this->getPlayer()->getName() <<" has chosen to NEGOTIATE with "<<negotiatePartnerName<<endl;
                             break;
                         }
                     }
@@ -195,8 +244,6 @@ vector<Order*> HumanPlayerStrategy::issueOrder() {
                 }
                 break;
             }
-
-
             case 3: {
                 hasOrders = false;
                 break;
@@ -260,6 +307,8 @@ vector<Order*> AggressivePlayerStrategy::issueOrder() {
     int allReinforcements = *this->getPlayer()->getReinforcements();
     Order* deploy = new Deploy(&allReinforcements, &strongestTerritoryName, this->getPlayer());
     aggressiveOrders.push_back(deploy);
+    cout<<"Player: "<<*this->getPlayer()->getName()<<" has ordered to DEPLOY "<<allReinforcements<<" onto "<<strongestTerritoryName<<" which already had "<<
+        strongestOwnedTerritory->getNoOfArmies()<<" troops"<<endl;
     this->getPlayer()->setReinforcements(0);
     Territory* weakestTargetTerritory = toAttack();
     string weakestTerritoryName = weakestTargetTerritory->getTerritoryName();
@@ -268,11 +317,15 @@ vector<Order*> AggressivePlayerStrategy::issueOrder() {
         if(*this->getPlayer()->getHand()->getCards()[i]->getCardName() == "BOMB"){
             Order* bomb = new Bomb(&weakestTerritoryName,this->getPlayer());
             aggressiveOrders.push_back(bomb);
+            cout<<"Player: "<<*this->getPlayer()->getName()<<" has ordered to BOMB "<<weakestTerritoryName<<" which only had "<<
+                weakestTargetTerritory->getNoOfArmies()<<" troops"<<endl;
         }
     }
     int strongestNoOfArmies = strongestOwnedTerritory->getNoOfArmies() + allReinforcements; //order to advance with current armies + reinforcement order needs to be checked when orders are executed
     Order* advance = new Advance(&strongestNoOfArmies,&weakestTerritoryName,&strongestTerritoryName,this->getPlayer());
     aggressiveOrders.push_back(advance);
+    cout<<"Player: "<<*this->getPlayer()->getName()<<" has ordered to ADVANCE "<<strongestNoOfArmies<<" onto "<<weakestTerritoryName<<" which only had "<<
+        weakestTargetTerritory->getNoOfArmies()<<" troops"<<endl;
     return aggressiveOrders;
 }
 
@@ -329,6 +382,7 @@ vector<Order*> BenevolentPlayerStrategy::issueOrder() {
     int noOfReinforcements = *this->getPlayer()->getReinforcements();
     Order* benevolentDeploy = new Deploy(&noOfReinforcements, &territoryName, this->getPlayer());
     benevolentOrders.push_back(benevolentDeploy);
+    cout<<"Player: "<<*this->getPlayer()->getName()<<" has ordered to DEPLOY "<<noOfReinforcements<<" onto "<<territoryName<<" which only had "<<t->getNoOfArmies()<<" troops"<<endl;
     this->getPlayer()->setReinforcements(0);
     return benevolentOrders;
     //deploy armies to the weakest territory
@@ -374,6 +428,7 @@ vector<Order*> NeutralPlayerStrategy::issueOrder() {
     if(this->getPlayer()->getTerritories().size() != *this->noOfTerritories){
         PlayerStrategy* ps = new AggressivePlayerStrategy(this->getPlayer());
         this->getPlayer()->setPlayerStrategy(ps);
+        cout<<"Player: "<<*this->getPlayer()->getName()<<" has become enraged, they are now Aggressive (>_<)"<<endl;
     }
     return order;
 }
@@ -417,7 +472,7 @@ vector<Order*> CheaterPlayerStrategy::issueOrder() {
             }
         }
     }
-
+    cout << "I DIDN'T CHEAT (~#_#) " <<endl;
     return emptyOrders;
 }
 Territory* CheaterPlayerStrategy::toAttack() {

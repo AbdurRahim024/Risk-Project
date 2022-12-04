@@ -106,12 +106,8 @@ void testPlayerStrategies(){
     testPlayer->setReinforcements(8);
     PlayerStrategy* aggressivePs = new AggressivePlayerStrategy(testPlayer);
     testPlayer->setPlayerStrategy(aggressivePs);
-    cout<<"We have set the TestPlayer to have the AggressivePlayerStrategy behavior"<<endl;
+    cout<<"\nWe have set the TestPlayer to have the AggressivePlayerStrategy behavior"<<endl;
     vector<Order*> aggressiveOrders = testPlayer->issueOrder();
-    cout<<"Order: "<<*aggressiveOrders[0]->getOrderName()<<"has been created by "<<*testPlayer->getName()<<endl;
-    cout<<"Here the aggressive player has deployed all of his reinforcement units onto his strongest territory"<<endl;
-    cout<<"Order: "<<*aggressiveOrders[1]->getOrderName()<<"has been created by "<<*testPlayer->getName()<<endl;
-    cout<<"Here the aggressive player has chosen to bomb the weakest territory"<<endl;
 
     testPlayer->setReinforcements(8);
     PlayerStrategy* benevolentPs = new BenevolentPlayerStrategy(testPlayer);
@@ -124,11 +120,16 @@ void testPlayerStrategies(){
     testPlayer->setPlayerStrategy(neutralPs);
     cout<<"We have set the TestPlayer to have the NeutralPlayerStrategy behavior"<<endl;
     vector<Order*> neutralOrders = testPlayer->issueOrder();
+    testPlayer->removeTerritory(mexico);
+    neutralOrders = testPlayer->issueOrder();
+    neutralOrders = testPlayer->issueOrder();
 
+    testPlayer->addTerritory(mexico);
     PlayerStrategy* cheaterPs = new CheaterPlayerStrategy(testPlayer);
     testPlayer->setPlayerStrategy(cheaterPs);
     cout<<"We have set the TestPlayer to have the CheaterPlayerStrategy behavior"<<endl;
     vector<Order*> cheaterOrders = testPlayer->issueOrder();
+    cout<<"\n\n"<<endl;
     for (int i = 0; i < map->getAllTerritories().size(); ++i) {
         cout<<map->getAllTerritories()[i]->getPlayerName()<<" - "<<map->getAllTerritories()[i]->getTerritoryName()<<endl;
     }
