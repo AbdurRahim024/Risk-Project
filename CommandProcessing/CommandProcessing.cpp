@@ -346,7 +346,8 @@ Tournament::Tournament(vector<string> gameInfo) {
     this->tournamentData += "Players : ";
     vector<PlayerStrategy*> ps;
     for(int i = 0; i < players.size(); i++) {
-        string name = players[i] + to_string(i);
+//        string name = players[i] + to_string(i);
+        string name = players[i];
         Player* p = new Player(new string(name));
 
         if (players[i] == "aggressive") {
@@ -408,7 +409,7 @@ void Tournament::setNumOfTurns(int num){
 }
 
 void Tournament::addGameStat(string map, int gameNumber, string winner) {
-    this->tournamentData += map + " || " + to_string(gameNumber) + " - winner: " + winner + "\n";
+    this->tournamentData += map + " || Game " + to_string(gameNumber) + " - winner: " + winner + "\n";
 }
 
 void Tournament::printGameData() {

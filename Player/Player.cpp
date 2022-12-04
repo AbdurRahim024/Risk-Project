@@ -188,6 +188,13 @@ void Player::resetRoundInfo() {         // A3 P2 Amanda
     for(Player* player : this->negotiations) {
         this->negotiations.pop_back();
     }
+
+    this->territories.clear();
+    setHand(new Hand());
+    this->orders->getOrders().clear();
+    if(*this->getName() == "neutral"){
+        this->setPlayerStrategy(new NeutralPlayerStrategy(this));
+    }
 };
 
 bool* Player::hasTerritories() {

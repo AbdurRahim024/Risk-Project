@@ -56,15 +56,20 @@ GameEngine::GameEngine(Tournament* tournament) {
 
     for(string* map : this->tournament->getMaps()) {
         this->mapName = map;
-        for(PlayerStrategy* player : this->tournament->getPlayerStrategies()) {
-//            this->players.push_back((Player*)player);   //todo: is this valid/fine?
-            this->players.push_back(player->getPlayer());
-        }
         this->loadMap(*this->mapName);
         if(this->validateMap() == new string("validatemap failed because the current map is invalid")) {
             continue;
-        };
+        }
+
         for(int i = 0; i < *this->numOfGames; i++) {
+            //clear players
+            if(this->players.size() != 0) {
+                this->players.clear();
+            }
+            for(PlayerStrategy* player : this->tournament->getPlayerStrategies()) {
+                this->players.push_back(player->getPlayer());
+            }
+
             this->gameCount = new int(i);
             this->turnCount = new int(0);
             // todo: run game numOfTurns times
@@ -72,14 +77,18 @@ GameEngine::GameEngine(Tournament* tournament) {
             while(*(this->turnCount) <= *this->numOfTurns) {
                 this->mainGameLoop();
 
-                if (!*(toContinue)) {
-                    tournament->printGameData();
-                    return;
+                if (!(*toContinue)) {
+                    for(PlayerStrategy* p : tournament->getPlayerStrategies()) {
+                        p->getPlayer()->resetRoundInfo();
+                     }
+                    break;
                 }
             }
 
         }
+
     }
+    tournament->printGameData();
 };
 
 // COPY CONSTRUCTOR
@@ -291,9 +300,8 @@ string *GameEngine::loadMap(string mapName) {
     MapLoader *loader = new MapLoader;
 
 
-    //todo: replace this with regular map reading
-    this->gameMap = testMap();
-//    this->gameMap = loader->loadMap(mapName);
+//    this->gameMap = testMap();
+    this->gameMap = loader->loadMap(mapName);
 
 
 
@@ -451,67 +459,6 @@ vector<string> GameEngine::split(string cmd) {
     return elements;
 }
 
-Map* GameEngine::testMap() {
-    Map *m = new Map();
-
-    Continent *af = new Continent(new string("AFRICA"), new int(5));
-    Territory *kenya = new Territory(new string("KENYA"), af);
-    Territory *ethiopia = new Territory(new string("ETHIOPIA"), af);
-    Territory *sudan = new Territory(new string("SUDAN"), af);
-
-
-    Continent *as = new Continent(new string("ASIA"), new int(6));
-    Territory *india = new Territory(new string("INDIA"), as);
-    Territory *pakistan = new Territory(new string("PAKISTAN"), as);
-    Territory *china = new Territory(new string("CHINA"), as);
-
-    kenya->setNoOfArmies(new int(0));
-    ethiopia->setNoOfArmies(new int(0));
-    sudan->setNoOfArmies(new int(0));
-    india->setNoOfArmies(new int(0));
-    pakistan->setNoOfArmies(new int(0));
-    china->setNoOfArmies(new int(0));
-
-    af->setListofTerritories(kenya);
-    af->setListofTerritories(ethiopia);
-    af->setListofTerritories(sudan);
-
-    as->setListofTerritories(india);
-    as->setListofTerritories(pakistan);
-    as->setListofTerritories(china);
-
-    kenya->setAdjacentTerritories(ethiopia);
-
-    ethiopia->setAdjacentTerritories(kenya);
-    ethiopia->setAdjacentTerritories(sudan);
-
-    sudan->setAdjacentTerritories(ethiopia);
-    sudan->setAdjacentTerritories(india);
-
-    india->setAdjacentTerritories(sudan);
-    india->setAdjacentTerritories(pakistan);
-    india->setAdjacentTerritories(china);
-
-    pakistan->setAdjacentTerritories(india);
-    pakistan->setAdjacentTerritories(china);
-
-    china->setAdjacentTerritories(pakistan);
-    china->setAdjacentTerritories(india);
-
-    m->setAllTerritories(kenya);
-    m->setAllTerritories(sudan);
-    m->setAllTerritories(ethiopia);
-    m->setAllTerritories(india);
-    m->setAllTerritories(pakistan);
-    m->setAllTerritories(china);
-
-    m->setSubgraph(af);
-    m->setSubgraph(as);
-
-    return m;
-}
-
-
 // MAIN GAME LOOP
 
 // DESTRUCTOR
@@ -602,7 +549,7 @@ void GameEngine::executeOrdersPhase(OrdersLists *list) {
     //todo: check if any player doesnt have territories and remove them
     vector<int> removeIndices;
     for(int i = 0; i < this->players.size(); i++) {
-        this->players[i]->resetRoundInfo();
+        //todo: fix player reset
         bool hasTerr = *(this->players[i]->hasTerritories());
         if(!hasTerr) {
             removeIndices.push_back(i);
@@ -623,17 +570,17 @@ void GameEngine::executeOrdersPhase(OrdersLists *list) {
 bool* GameEngine::checkWinner() {
     if(this->players.size() == 1) {
         this->tournament->addGameStat(*this->mapName, *this->gameCount, *this->players[0]->getName());
-        return new bool(true);
+        return new bool(false);
     }
     for(int i = 0; i < this->players.size(); i++) {
         if(this->players[i]->getTerritories().size() == this->gameMap->getAllTerritories().size()) {
             this->tournament->addGameStat(*this->mapName, *this->gameCount, *this->players[i]->getName());
-            return new bool(true);
+            return new bool(false);
         }
     }
     if(*this->turnCount == *this->numOfTurns) {
         this->tournament->addGameStat(*this->mapName, *this->gameCount, "Draw");
-        return new bool(true);
+        return new bool(false);
     }
     return new bool(true);
 };
