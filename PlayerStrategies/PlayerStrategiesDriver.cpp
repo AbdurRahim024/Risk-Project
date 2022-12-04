@@ -143,9 +143,9 @@ void testPlayerStrategies(){
 
 
 
-int main(){
-    testPlayerStrategies();
-}
+//int main(){
+//    testPlayerStrategies();
+//}
 //create a player
 
 //assign them a specific strategy

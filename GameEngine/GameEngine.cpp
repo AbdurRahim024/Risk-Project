@@ -10,6 +10,10 @@ int *GameEngine::state = &zeroState;
 LogObserver *GameEngine::obs = NULL;
 
 GameEngine::GameEngine() {
+    dictionariesSetup();
+}
+
+void GameEngine::dictionariesSetup() {
     intToStringState[0] = new string("start");
     intToStringState[1] = new string("map loaded");
     intToStringState[2] = new string("map validated");
@@ -42,15 +46,47 @@ GameEngine::GameEngine() {
 
     allowedStates[7].push_back(new int(100)); // winCommands
     allowedStates[7].push_back(new int(8)); // winCommands
-
 }
+
+GameEngine::GameEngine(Tournament* tournament) {
+    dictionariesSetup();
+    this->tournament = tournament;
+    this->numOfGames = this->tournament->getNumOfGames();
+    this->numOfTurns = this->tournament->getNumOfTurns();
+
+    for(string* map : this->tournament->getMaps()) {
+        this->mapName = map;
+        for(PlayerStrategy* player : this->tournament->getPlayerStrategies()) {
+//            this->players.push_back((Player*)player);   //todo: is this valid/fine?
+            this->players.push_back(player->getPlayer());
+        }
+        this->loadMap(*this->mapName);
+        if(this->validateMap() == new string("validatemap failed because the current map is invalid")) {
+            continue;
+        };
+        for(int i = 0; i < *this->numOfGames; i++) {
+            this->gameCount = new int(i);
+            this->turnCount = new int(0);
+            // todo: run game numOfTurns times
+            this->gameStart();
+            while(*(this->turnCount) <= *this->numOfTurns) {
+                this->mainGameLoop();
+
+                if (!*(toContinue)) {
+                    tournament->printGameData();
+                    return;
+                }
+            }
+
+        }
+    }
+};
 
 // COPY CONSTRUCTOR
 GameEngine::GameEngine(const GameEngine &ge) {
     cout << "Copy constructor of Game Engine called" << endl;
     allowedStates = ge.allowedStates;
     intToStringState = ge.intToStringState;
-
 }
 
 // ASSIGNMENT OPERATOR
@@ -173,11 +209,21 @@ void GameEngine::startupPhase() {
         CommandProcessor *cp = new CommandProcessor();
 
         //while state isn't in assign reinforcement (first step of play phase)
-        while (*state != 4) {
+        do {
             Command *command = cp->getCommand();
+            //check that command is a tournament, if so create tournament object, then call GameEngine(tournament) and return;
+            string* cmdString = command->getCommandString();
+            vector<string> cmdArr = Tournament::tokenize(*cmdString,' ');
+            if (cmdArr[0] == "tournament") {
+                Tournament* t = new Tournament(cmdArr);
+                GameEngine* g = new GameEngine(t);
+                return;
+            }
+
+
             string *effect = execute(command->getCommandString());
             command->saveEffect(effect);
-        }
+        } while (*state != 4);
 
         cout << "Play phase has begun\n" << endl;
 
@@ -188,13 +234,23 @@ void GameEngine::startupPhase() {
         }
     }
 
-        // reading from a text file
+    // reading from a text file
     else {
         FileCommandProcessorAdapter *fp = new FileCommandProcessorAdapter();
 
         //while state isn't in assign reinforcement (first step of play phase)
         while (*state != 4) {
             Command *command = fp->passCommand();
+            //check that command is a tournament, if so create tournament object, then call GameEngine(tournament) and return;
+            string* cmdString = command->getCommandString();
+            vector<string> cmdArr = Tournament::tokenize(*cmdString,' ');
+            if (cmdArr[0] == "tournament") {
+                Tournament* t = new Tournament(cmdArr);
+                GameEngine* g = new GameEngine(t);
+                return;
+            }
+
+
             string *effect = execute(command->getCommandString());
             command->saveEffect(effect);
         }
@@ -208,6 +264,8 @@ void GameEngine::startupPhase() {
         }
     }
 }
+
+
 
 // GAME TRANSITION HELPERS
 
@@ -227,15 +285,17 @@ string *GameEngine::execute(string *command) {
     }
 
     return effect;
-
 }
 
 string *GameEngine::loadMap(string mapName) {
-
     MapLoader *loader = new MapLoader;
-    this->gameMap = loader->loadMap(mapName);
 
-//    this->gameMap = testMap();
+
+    //todo: replace this with regular map reading
+    this->gameMap = testMap();
+//    this->gameMap = loader->loadMap(mapName);
+
+
 
     //effect
     cout << "The map " << mapName << " was loaded into the game engine" << endl;
@@ -263,7 +323,6 @@ string *GameEngine::validateMap() {
     gameFlow("validatemap");
     cout << *this << endl;
     return new string(effect);
-
 }
 
 
@@ -313,6 +372,7 @@ string *GameEngine::gameStart() {
         //evenly assign territories to players
         for (int j = i; j < territories.size(); j += players.size()) {
             players.at(i)->addTerritory(territories.at(j));
+            territories[j]->setPlayer(players[i]);
         }
 
         //give 50 initial army units to each player (add to reinforcement pool)
@@ -391,8 +451,7 @@ vector<string> GameEngine::split(string cmd) {
     return elements;
 }
 
-Map *testMap() {
-
+Map* GameEngine::testMap() {
     Map *m = new Map();
 
     Continent *af = new Continent(new string("AFRICA"), new int(5));
@@ -405,6 +464,13 @@ Map *testMap() {
     Territory *india = new Territory(new string("INDIA"), as);
     Territory *pakistan = new Territory(new string("PAKISTAN"), as);
     Territory *china = new Territory(new string("CHINA"), as);
+
+    kenya->setNoOfArmies(new int(0));
+    ethiopia->setNoOfArmies(new int(0));
+    sudan->setNoOfArmies(new int(0));
+    india->setNoOfArmies(new int(0));
+    pakistan->setNoOfArmies(new int(0));
+    china->setNoOfArmies(new int(0));
 
     af->setListofTerritories(kenya);
     af->setListofTerritories(ethiopia);
@@ -443,7 +509,6 @@ Map *testMap() {
     m->setSubgraph(as);
 
     return m;
-
 }
 
 
@@ -464,11 +529,15 @@ GameEngine::~GameEngine() {
     }
 }
 
-void mainGameLoop() {
+void GameEngine::mainGameLoop() {
     //first phase of game loop is to calculate number of reinforcement armies
     //reinforcementPhase();
     //if listOfPlayers is equal to 1 call end game screen
+    // todo: remove comments?
 
+    this->reinforcementPhase(this->players, this->gameMap);
+    OrdersLists* ol = this->issueOrdersPhase(this->players);
+    this->executeOrdersPhase(ol);
 }
 
 //This method will loop over all the continents and check if a player owns all the territories in the particular continent
@@ -507,7 +576,6 @@ void GameEngine::reinforcementPhase(vector<Player *> listOfPlayers, Map *map) {
 }
 
 
-
 // This method created orders using the issue order method and pushes the orders into the orders list
 OrdersLists *GameEngine::issueOrdersPhase(vector<Player *> listOfPlayers) {
     OrdersLists *list = new OrdersLists();
@@ -519,7 +587,7 @@ OrdersLists *GameEngine::issueOrdersPhase(vector<Player *> listOfPlayers) {
     return list;
 }
 
-void executeOrdersPhase(OrdersLists *list) {
+void GameEngine::executeOrdersPhase(OrdersLists *list) {
 //    print header
     cout << "======= ORDERS NOW EXECUTING =======" << endl << endl;
 //    call execute on and print each order
@@ -529,7 +597,46 @@ void executeOrdersPhase(OrdersLists *list) {
     }
 //    print footer
     cout << "===== ORDERS FINISHED EXECUTING =====" << endl << endl << endl << endl << endl;
-}
+
+    //todo: Player negotiations and receivedCard need to be reset
+    //todo: check if any player doesnt have territories and remove them
+    vector<int> removeIndices;
+    for(int i = 0; i < this->players.size(); i++) {
+        this->players[i]->resetRoundInfo();
+        bool hasTerr = *(this->players[i]->hasTerritories());
+        if(!hasTerr) {
+            removeIndices.push_back(i);
+        }
+    }
+    for(int i = removeIndices.size()-1; i >= 0; i--) {
+        this->players.erase(this->players.begin() + i);
+    }
+
+
+    //todo: add turn counter
+    this->turnCount = new int(*this->turnCount + 1);
+
+    //todo: check win (either a player has all territories or there arent any other players left
+    this->toContinue = new bool(!this->checkWinner());
+};
+
+bool* GameEngine::checkWinner() {
+    if(this->players.size() == 1) {
+        this->tournament->addGameStat(*this->mapName, *this->gameCount, *this->players[0]->getName());
+        return new bool(true);
+    }
+    for(int i = 0; i < this->players.size(); i++) {
+        if(this->players[i]->getTerritories().size() == this->gameMap->getAllTerritories().size()) {
+            this->tournament->addGameStat(*this->mapName, *this->gameCount, *this->players[i]->getName());
+            return new bool(true);
+        }
+    }
+    if(*this->turnCount == *this->numOfTurns) {
+        this->tournament->addGameStat(*this->mapName, *this->gameCount, "Draw");
+        return new bool(true);
+    }
+    return new bool(false);
+};
 
 //ILoggable
 void GameEngine::Notify() {

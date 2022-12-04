@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Risk_Project"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Risk_Project">
+				<Option output="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/cmake-build-debug/Risk_Project" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Cards"/>
+					<Add directory="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/CommandProcessing"/>
+					<Add directory="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Driver"/>
+					<Add directory="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/GameEngine"/>
+					<Add directory="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/LoggingObserver"/>
+					<Add directory="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Map"/>
+					<Add directory="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Orders"/>
+					<Add directory="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Player"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/12.0.5/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 Risk_Project"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Risk_Project/fast">
+				<Option output="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/cmake-build-debug/Risk_Project" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Cards"/>
+					<Add directory="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/CommandProcessing"/>
+					<Add directory="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Driver"/>
+					<Add directory="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/GameEngine"/>
+					<Add directory="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/LoggingObserver"/>
+					<Add directory="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Map"/>
+					<Add directory="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Orders"/>
+					<Add directory="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Player"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/12.0.5/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 Risk_Project/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/emmuh/Documents/COMP/COMP\ 345/Risk-Project/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Cards/Cards.cpp">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Cards/Cards.h">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/CommandProcessing/CommandProcessing.cpp">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/CommandProcessing/CommandProcessing.h">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/CommandProcessing/CommandProcessingDriver.cpp">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Driver/MainDriver.cpp">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Driver/MainDriver.h">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/GameEngine/GameEngine.cpp">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/GameEngine/GameEngine.h">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/GameEngine/GameEngineDriver.cpp">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/GameEngine/GameEngineDriver.h">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/LoggingObserver/LoggingObserver.cpp">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/LoggingObserver/LoggingObserver.h">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/LoggingObserver/LoggingObserverDriver.cpp">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Map/map.cpp">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Map/map.h">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Orders/Orders.cpp">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Orders/Orders.h">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Orders/OrdersDriver.cpp">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Orders/OrdersDriver.h">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Player/Player.cpp">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/Player/Player.h">
+			<Option target="Risk_Project"/>
+		</Unit>
+		<Unit filename="/Users/emmuh/Documents/COMP/COMP 345/Risk-Project/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

@@ -7,10 +7,13 @@
 #include "LoggingObserver.h"
 #include "GameEngine.h"
 using namespace std;
+#include <vector>
+#include <sstream>
 
 class Command;
 class FileLineReader;
 class FileCommandProcessorAdapter;
+class PlayerStrategy;
 
 
 class CommandProcessor : public ILoggable, public Subject {
@@ -148,6 +151,34 @@ ostream &operator << (ostream &output, CommandProcessor &obj);
 ostream &operator << (ostream &output, FileCommandProcessorAdapter &obj);
 ostream &operator << (ostream &output, FileLineReader &obj);
 
+
+class Tournament {
+private:
+    vector<PlayerStrategy*> playerStrategies;
+    vector<string*> maps;
+    int* numOfGames;
+    int* numOfTurns;
+
+
+public:
+    Tournament(vector<string> gameInfo);
+    vector<PlayerStrategy*> getPlayerStrategies();
+    vector<string*> getMaps();
+    int* getNumOfGames();
+    int* getNumOfTurns();
+
+    void setPlayerStrategies(vector<PlayerStrategy*> ps);
+    void setMaps(vector<string*> maps);
+    void setNumOfGames(int num);
+    void setNumOfTurns(int num);
+
+    void addGameStat(string map, int gameNumber, string winner);
+    void printGameData();
+
+    static vector<string> tokenize(string str, char delim);
+    static string tournamentStrValidate(vector<string> inputArr);
+    string tournamentData;
+};
 
 #endif //RISK_PROJECT_COMMANDPROCESSING_H
 

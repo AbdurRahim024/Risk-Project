@@ -68,7 +68,7 @@ void testMainGameLoop(){
     cout << *diego->getName() << " has: " << *diego->getReinforcements() << " reinforcements" << endl;
 
     //Calling the issueOrdersPhase method which returns and Orders List with the order created inside
-    list = game->issueOrdersPhase(listofPlayers,map);
+//    list = game->issueOrdersPhase(listofPlayers,map);
 
 
     //Removing a player from the game

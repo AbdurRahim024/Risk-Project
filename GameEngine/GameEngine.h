@@ -15,12 +15,21 @@ class LogObserver;
 class ILoggable;
 class Map;
 class OrdersLists;
-
+class Tournament;
+class PlayerStrategy;
+class Player;
 
 class GameEngine: public Subject, public ILoggable{
 private:
+    string* mapName;
     Map* gameMap;
     vector<Player*> players;
+    Tournament* tournament; // A3 P2 Amanda
+    int* numOfGames;        // A3 P2 Amanda
+    int* numOfTurns;        // A3 P2 Amanda
+    int* gameCount;         // A3 P2 Amanda
+    int* turnCount;         // A3 P2 Amanda
+    bool* toContinue;       // A3 P2 Amanda
 
     unordered_map<int,vector<int*>> allowedStates;
     unordered_map<int,string*> intToStringState;
@@ -33,6 +42,7 @@ private:
 public:
     // CONSTRUCTOR
     GameEngine();
+    GameEngine(Tournament* tournament);
 
     // COPY CONSTRUCTOR
     GameEngine(const GameEngine& ge);
@@ -58,7 +68,6 @@ public:
     // START UP PHASE METHODS
     void startupPhase();
     string* execute(string* command);
-
     string* loadMap(string mapName);
     string* validateMap();
     string* addPlayer(string* name);
@@ -66,6 +75,7 @@ public:
     void shufflePlayerOrder();
 
     vector<string> split(string cmd);
+    void dictionariesSetup();
     Map* testMap();
 
 
@@ -73,7 +83,8 @@ public:
     void mainGameLoop();
     void reinforcementPhase(vector<Player*> listOfPlayers,Map* map);
     OrdersLists* issueOrdersPhase(vector<Player*> listOfPlayers);
-    void executeOrdersPhase(OrdersLists* list );
+    void executeOrdersPhase(OrdersLists* list);
+    bool* checkWinner();
     int continentBonus(Player* player, Map* map);
 
     //ILoggable

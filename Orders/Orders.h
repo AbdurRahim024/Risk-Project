@@ -226,7 +226,6 @@ public:
     void remove(int index);
     void remove(Order* order);
     void move(int firstIndex, int secondIndex);
-    void execute();
     string stringToLog() override;
     void Notify() override;
     static void setObserver(LogObserver* o);

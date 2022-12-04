@@ -1,0 +1,11 @@
+-------------RISK TOURNAMENT------------
+
+Tournament Maps : Asia.map; NY.map; 
+Players : aggressive0; benevolent1; neutral2; cheater3; 
+Number of games per map: 2
+Number of turns per game: 10
+
+
+FINAL RESULTS
+
+Asia.map || 0 - winner: cheater3
