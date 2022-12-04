@@ -308,15 +308,15 @@ AggressivePlayerStrategy::~AggressivePlayerStrategy() {
 vector<Order*> AggressivePlayerStrategy::issueOrder() {
     vector<Order*> aggressiveOrders;
     Territory* strongestOwnedTerritory = toDefend();
-    string strongestTerritoryName = strongestOwnedTerritory->getTerritoryName();
-    int allReinforcements = *this->getPlayer()->getReinforcements();
-    Order* deploy = new Deploy(&allReinforcements, &strongestTerritoryName, this->getPlayer());
+    string* strongestTerritoryName = new string (strongestOwnedTerritory->getTerritoryName());
+    int* allReinforcements = new int(*this->getPlayer()->getReinforcements());
+    Order* deploy = new Deploy(allReinforcements, strongestTerritoryName, this->getPlayer());
     aggressiveOrders.push_back(deploy);
-    cout<<"Player: "<<*this->getPlayer()->getName()<<" has ordered to DEPLOY "<<allReinforcements<<" onto "<<strongestTerritoryName<<" which already had "<<
+    cout<<"Player: "<<*this->getPlayer()->getName()<<" has ordered to DEPLOY "<<*allReinforcements<<" onto "<<*strongestTerritoryName<<" which already had "<<
         strongestOwnedTerritory->getNoOfArmies()<<" troops"<<endl;
-    this->getPlayer()->setReinforcements(0);
+    //this->getPlayer()->setReinforcements(0);
     Territory* weakestTargetTerritory = toAttack();
-    string weakestTerritoryName = weakestTargetTerritory->getTerritoryName();
+    string* weakestTerritoryName = new string(weakestTargetTerritory->getTerritoryName());
     //check if we have any aggressive cards (bomb)
     for (int i = 0; i < this->getPlayer()->getHand()->getCards().size(); ++i) {
         if(*this->getPlayer()->getHand()->getCards()[i]->getCardName() == "BOMB"){
@@ -326,8 +326,9 @@ vector<Order*> AggressivePlayerStrategy::issueOrder() {
                 weakestTargetTerritory->getNoOfArmies()<<" troops"<<endl;
         }
     }
-    int strongestNoOfArmies = strongestOwnedTerritory->getNoOfArmies() + allReinforcements; //order to advance with current armies + reinforcement order needs to be checked when orders are executed
-    Order* advance = new Advance(&strongestNoOfArmies,&weakestTerritoryName,&strongestTerritoryName,this->getPlayer());
+    int strongestNoOfArmies = strongestOwnedTerritory->getNoOfArmies() + *allReinforcements;//order to advance with current armies + reinforcement order needs to be checked when orders are executed
+    int* strongestNoOfArmiesPtr = new int(strongestNoOfArmies);
+    Order* advance = new Advance(strongestNoOfArmiesPtr,weakestTerritoryName,strongestTerritoryName,this->getPlayer());
     aggressiveOrders.push_back(advance);
     cout<<"Player: "<<*this->getPlayer()->getName()<<" has ordered to ADVANCE "<<strongestNoOfArmies<<" onto "<<weakestTerritoryName<<" which only had "<<
         weakestTargetTerritory->getNoOfArmies()<<" troops"<<endl;
@@ -354,15 +355,20 @@ Territory* AggressivePlayerStrategy::toAttack() {
 }
 Territory* AggressivePlayerStrategy::toDefend() {
     //variable called strongestOwned
-    Territory* strongestOwned = this->getPlayer()->getTerritories()[0];
+    Territory* strongestOwned;
     //variable with max number of armies, initially set to territory[0]
-    int maxNumOfArmies = this->getPlayer()->getTerritories()[0]->getNoOfArmies();
+    int maxNumOfArmies = -1;
     //loop through all my owned territories
     //if bigger, set new max number and set new strongestOwned
     for (int i = 0; i < this->getPlayer()->getTerritories().size(); ++i) {
-        if(this->getPlayer()->getTerritories()[i]->getNoOfArmies()>maxNumOfArmies && *this->getPlayer()->getName() == this->getPlayer()->getTerritories()[i]->getPlayerName()){
-            maxNumOfArmies = this->getPlayer()->getTerritories()[i]->getNoOfArmies();
-            strongestOwned = this->getPlayer()->getTerritories()[i];
+        if(this->getPlayer()->getTerritories()[i]->getNoOfArmies()>maxNumOfArmies
+           && *this->getPlayer()->getName() == this->getPlayer()->getTerritories()[i]->getPlayerName()){
+            for (int j = 0; j < this->getPlayer()->getTerritories()[i]->getAdjacentTerritories().size(); ++j) {
+                if(this->getPlayer()->getTerritories()[i]->getPlayerName() != this->getPlayer()->getTerritories()[i]->getAdjacentTerritories()[j]->getPlayerName()){
+                    maxNumOfArmies = this->getPlayer()->getTerritories()[i]->getNoOfArmies();
+                    strongestOwned = this->getPlayer()->getTerritories()[i];
+                }
+            }
         }
     }
     return strongestOwned;
@@ -388,8 +394,8 @@ vector<Order*> BenevolentPlayerStrategy::issueOrder() {
     int noOfReinforcements = *this->getPlayer()->getReinforcements();
     Order* benevolentDeploy = new Deploy(&noOfReinforcements, &territoryName, this->getPlayer());
     benevolentOrders.push_back(benevolentDeploy);
-    cout<<"Player: "<<*this->getPlayer()->getName()<<" has ordered to DEPLOY "<<noOfReinforcements<<" onto "<<territoryName<<" which only had "<<t->getNoOfArmies()<<" troops"<<endl;
-    this->getPlayer()->setReinforcements(0);
+    cout<<"Player: "<<*this->getPlayer()->getName()<<" has ordered to DEPLOY "<<*noOfReinforcements<<" onto "<<*territoryName<<" which only had "<<t->getNoOfArmies()<<" troops"<<endl;
+    //this->getPlayer()->setReinforcements(0);
     return benevolentOrders;
     //deploy armies to the weakest territory
     //call toDefend to find its weakest territory and deploy all reinforcement armies there
@@ -406,7 +412,7 @@ Territory* BenevolentPlayerStrategy::toDefend() {
     //loop through all my owned territories
     //if bigger, set new max number and set new strongestOwned
     for (int i = 0; i < this->getPlayer()->getTerritories().size(); ++i) {
-        if(this->getPlayer()->getTerritories()[i]->getNoOfArmies()<minNumOfArmies){
+        if(this->getPlayer()->getTerritories()[i]->getNoOfArmies()<minNumOfArmies && *this->getPlayer()->getName() == this->getPlayer()->getTerritories()[i]->getPlayerName()){
             minNumOfArmies = this->getPlayer()->getTerritories()[i]->getNoOfArmies();
             weakestOwned = this->getPlayer()->getTerritories()[i];
         }
@@ -416,13 +422,13 @@ Territory* BenevolentPlayerStrategy::toDefend() {
 
 //NEUTRAL
 NeutralPlayerStrategy::NeutralPlayerStrategy() {
-
+    this->noOfTerritories = new int(0);
 }
 
 NeutralPlayerStrategy::NeutralPlayerStrategy(Player *player) {
     this->setPlayer(player);
     player->setPlayerStrategy(this);
-    this->noOfTerritories = new int(this->getPlayer()->getTerritories().size());
+    this->noOfTerritories = new int(player->getTerritories().size());
 }
 
 NeutralPlayerStrategy::~NeutralPlayerStrategy() {
@@ -432,6 +438,9 @@ NeutralPlayerStrategy::~NeutralPlayerStrategy() {
 vector<Order*> NeutralPlayerStrategy::issueOrder() {
     //NEUTRAL
     vector<Order*> order;
+    if(*this->noOfTerritories == 0){
+        this->noOfTerritories = new int(this->getPlayer()->getTerritories().size());
+    }
     if(this->getPlayer()->getTerritories().size() != *this->noOfTerritories){
         PlayerStrategy* ps = new AggressivePlayerStrategy(this->getPlayer());
         this->getPlayer()->setPlayerStrategy(ps);
@@ -469,14 +478,13 @@ vector<Order*> CheaterPlayerStrategy::issueOrder() {
     for (int i = 0; i < this->getPlayer()->getTerritories().size(); ++i) {
         for (int j = 0; j < this->getPlayer()->getTerritories()[i]->getAdjacentTerritories().size(); ++j) {
             if(this->getPlayer()->getTerritories()[i]->getAdjacentTerritories()[j]->getPlayerName() != *this->getPlayer()->getName()){
-                string name = *this->getPlayer()->getTerritories()[i]->getAdjacentTerritories()[j]->getPlayer()->getName();
+                string name = *this->getPlayer()->getName();
+                Territory* stolenTerritory = this->getPlayer()->getTerritories()[i]->getAdjacentTerritories()[j];
+                cout<<"Player: "<<name<<" has stolen "<<stolenTerritory->getTerritoryName()<<" from "<<stolenTerritory->getPlayerName()<<endl;
                 this->getPlayer()->getTerritories()[i]->getAdjacentTerritories()[j]->getPlayer()->removeTerritory(this->getPlayer()->getTerritories()[i]->getAdjacentTerritories()[j]);
                 this->getPlayer()->getTerritories()[i]->getAdjacentTerritories()[j]->setPlayer(this->getPlayer());
                 this->getPlayer()->addTerritory(this->getPlayer()->getTerritories()[i]->getAdjacentTerritories()[j]);
-                //string playersName = *this->getPlayer()->getName();
-                //this->getPlayer()->getTerritories()[i]->getAdjacentTerritories()[j]->setPlayerName(playersName);
                 string name2 = *this->getPlayer()->getTerritories()[i]->getAdjacentTerritories()[j]->getPlayer()->getName();
-
             }
         }
     }

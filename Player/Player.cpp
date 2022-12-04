@@ -161,31 +161,6 @@ void Player::addTerritory(Territory* newTerr) {
     this->territories.push_back(newTerr);
 }
 
-//// The toAttack method returns the list of territories that can be attacked by the user
-//vector<Territory*> Player::toAttack(Territory* source) {
-//    vector<Territory*> attTerritories;
-//    for (int i = 0; i < source->getAdjacentTerritories().size(); ++i) {
-//        if (source->getAdjacentTerritories()[i]->getPlayerName() != source->getPlayerName()) {
-//            attTerritories.push_back(source->getAdjacentTerritories()[i]);
-//        }
-//    }
-//    return attTerritories;
-//}
-//
-//
-//// The toDefend method returns the list of territories that can be defended by the user
-//vector<Territory*> Player::toDefend(Territory* source) {
-//    vector<Territory*> defTerritories;
-//    for (int i = 0; i < source->getAdjacentTerritories().size(); ++i) {
-//        if (source->getAdjacentTerritories()[i]->getPlayerName() == source->getPlayerName()) {
-//            defTerritories.push_back(source->getAdjacentTerritories()[i]);
-//        }
-//    }
-//    return defTerritories;
-//}
-
-
-// The issue order method creates and returns an order with the help of toAttack and to Defend methods
 vector<Order*> Player::issueOrder() {
     return this->ps->issueOrder();
 }
@@ -225,11 +200,6 @@ bool* Player::hasTerritories() {
     }
     return new bool(true);
 };
-
-
-
-
-
 
 Player::~Player() {
     delete id;

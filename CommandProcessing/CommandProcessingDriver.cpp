@@ -32,7 +32,6 @@ void testCommandProcessor() {
 
 int main() {
     testCommandProcessor();
-
 }
 
 

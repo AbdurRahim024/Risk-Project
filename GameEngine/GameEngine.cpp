@@ -534,7 +534,6 @@ void GameEngine::mainGameLoop() {
     //reinforcementPhase();
     //if listOfPlayers is equal to 1 call end game screen
     // todo: remove comments?
-
     this->reinforcementPhase(this->players, this->gameMap);
     OrdersLists* ol = this->issueOrdersPhase(this->players);
     this->executeOrdersPhase(ol);
@@ -580,8 +579,9 @@ void GameEngine::reinforcementPhase(vector<Player *> listOfPlayers, Map *map) {
 OrdersLists *GameEngine::issueOrdersPhase(vector<Player *> listOfPlayers) {
     OrdersLists *list = new OrdersLists();
     for (int i = 0; i < listOfPlayers.size(); ++i) {
-        for (int j = 0; j < listOfPlayers[i]->issueOrder().size(); ++j) {
-            list->add(listOfPlayers[i]->issueOrder()[j]);
+        vector<Order*> playersOrders = listOfPlayers[i]->issueOrder();
+        for (int j = 0; j < playersOrders.size(); ++j) {
+            list->add(playersOrders[j]);
         }
     }
     return list;
@@ -617,7 +617,7 @@ void GameEngine::executeOrdersPhase(OrdersLists *list) {
     this->turnCount = new int(*this->turnCount + 1);
 
     //todo: check win (either a player has all territories or there arent any other players left
-    this->toContinue = new bool(!this->checkWinner());
+    this->toContinue = checkWinner();
 };
 
 bool* GameEngine::checkWinner() {
@@ -635,7 +635,7 @@ bool* GameEngine::checkWinner() {
         this->tournament->addGameStat(*this->mapName, *this->gameCount, "Draw");
         return new bool(true);
     }
-    return new bool(false);
+    return new bool(true);
 };
 
 //ILoggable
@@ -651,4 +651,3 @@ string GameEngine::stringToLog() {
 void GameEngine::setObserver(LogObserver *o) {
     GameEngine::obs = o;
 }
-

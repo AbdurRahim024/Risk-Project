@@ -453,19 +453,10 @@ void Advance::execute() {
     }
 //    if there are no more enemy armies in targetTerritory, update its number of armies, its player, and the player's territories
     if(this->targetTerritory->getNoOfArmies() <= 0) {
+        this->targetTerritory->getPlayer()->removeTerritory(targetTerritory);
         this->targetTerritory->setNoOfArmies(new int(this->sourceTerritory->getNoOfArmies()));
         this->targetTerritory->setPlayer(this->player);
-        vector<Territory*> oldOwnerTerritories = this->targetTerritory->getPlayer()->getTerritories();
-        for(int i = 0; i < oldOwnerTerritories.size(); i++) {
-            if(oldOwnerTerritories[i]->getTerritoryName().compare(*targetName) == 0) {
-                oldOwnerTerritories.erase(oldOwnerTerritories.begin() + i, oldOwnerTerritories.begin() + i + 1);
-                break;
-            }
-        }
-        this->targetTerritory->getPlayer()->setTerritories(oldOwnerTerritories);
-        vector<Territory*> newOwnerTerritories = this->player->getTerritories();
-        newOwnerTerritories.push_back(this->targetTerritory);
-        this->player->setTerritories(newOwnerTerritories);
+        player->addTerritory(targetTerritory);
 //        if player has not yet received a card, give player a card and update receivedCard
         if(!this->player->getReceivedCard()) {
             Card* card = deck->draw();
@@ -474,6 +465,9 @@ void Advance::execute() {
             this->player->setHand(playerHand);
             this->player->setReceivedCard(new bool(true));
         }
+    }
+    if(this->sourceTerritory->getNoOfArmies()>0){
+        this->sourceTerritory->setNoOfArmies(new int(0));
     }
 //    calling setter to set orderEffect
     string effect = to_string(*this->unitsToSend) + " troops advanced to " + *this->targetName + ". " + *this->targetTerritory->getPlayer()->getName() + " owns the targeted territory with " +

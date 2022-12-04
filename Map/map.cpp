@@ -126,11 +126,14 @@ Territory::Territory(){};
 Territory::Territory(string* territoryName){
     this->territoryName = territoryName;
     this->continent = NULL;
+    this->setNoOfArmies(new int(0));
 }
 
 Territory::Territory(string *territoryName, Continent *continent){
     this->territoryName = territoryName;
     this->continent = continent;
+    this->setNoOfArmies(new int(0));
+
     //create a list of adjacent countries of the territory stored in a vector of points
 };
 
