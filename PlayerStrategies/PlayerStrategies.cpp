@@ -122,6 +122,7 @@ vector<Order*> HumanPlayerStrategy::issueOrder() {
                 cin >> num;
                 Order *advance = new Advance(&num, &target, &source, this->getPlayer());
                 humanOrders.push_back(advance);
+                cout << "Player: " << *this->getPlayer()->getName() << " has chosen to ADVANCE with " << num << " of their army units" <<endl;
                 break;
             }
 
@@ -184,6 +185,7 @@ vector<Order*> HumanPlayerStrategy::issueOrder() {
                             }
                             Order *airlift = new Airlift(&noOfArmies, &target, &source, this->getPlayer());
                             humanOrders.push_back(airlift);
+                            cout << "Player: " << *this->getPlayer()->getName() << " has chosen to AIRLIFT " << noOfArmies<<" to "<<target<< endl;
                             break;
                         }
                         case 8: {
@@ -199,6 +201,7 @@ vector<Order*> HumanPlayerStrategy::issueOrder() {
                             cin >> target;
                             Order *blockade = new Blockade(&target, this->getPlayer());
                             humanOrders.push_back(blockade);
+                            cout << "Player: " << *this->getPlayer()->getName() << " has chosen to BLOCKADE " << target << endl;
                             break;
                         }
                         case 9: {

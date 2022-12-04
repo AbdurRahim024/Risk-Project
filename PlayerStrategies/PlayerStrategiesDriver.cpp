@@ -112,13 +112,13 @@ void testPlayerStrategies(){
     testPlayer->setReinforcements(8);
     PlayerStrategy* benevolentPs = new BenevolentPlayerStrategy(testPlayer);
     testPlayer->setPlayerStrategy(benevolentPs);
-    cout<< "We have set the TestPlayer to have the BenevolentPlayerStrategy behavior"<<endl;
+    cout<< "\nWe have set the TestPlayer to have the BenevolentPlayerStrategy behavior"<<endl;
     vector<Order*> benevolentOrders = testPlayer->issueOrder();
 
     testPlayer->setReinforcements(8);
     PlayerStrategy* neutralPs = new NeutralPlayerStrategy(testPlayer);
     testPlayer->setPlayerStrategy(neutralPs);
-    cout<<"We have set the TestPlayer to have the NeutralPlayerStrategy behavior"<<endl;
+    cout<<"\nWe have set the TestPlayer to have the NeutralPlayerStrategy behavior"<<endl;
     vector<Order*> neutralOrders = testPlayer->issueOrder();
     testPlayer->removeTerritory(mexico);
     neutralOrders = testPlayer->issueOrder();
@@ -127,7 +127,7 @@ void testPlayerStrategies(){
     testPlayer->addTerritory(mexico);
     PlayerStrategy* cheaterPs = new CheaterPlayerStrategy(testPlayer);
     testPlayer->setPlayerStrategy(cheaterPs);
-    cout<<"We have set the TestPlayer to have the CheaterPlayerStrategy behavior"<<endl;
+    cout<<"\nWe have set the TestPlayer to have the CheaterPlayerStrategy behavior"<<endl;
     vector<Order*> cheaterOrders = testPlayer->issueOrder();
     cout<<"\n\n"<<endl;
     for (int i = 0; i < map->getAllTerritories().size(); ++i) {
