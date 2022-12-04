@@ -15,7 +15,7 @@ int* Player::playerCount = &zero;
 Player::Player(string* pName) {
     this->name = new string(*pName);
 
-    // Use the player count as the player's id then increment the count
+
     this->id = new int(*playerCount);
     *playerCount += 1;
 
@@ -51,7 +51,7 @@ Player& Player::operator=(const Player& copyPlayer) {
     this->orders = copyPlayer.orders;
     this->territories = copyPlayer.territories;
     this->negotiations = copyPlayer.negotiations;
-////receiveCard here?
+
 
     return *this;
 }

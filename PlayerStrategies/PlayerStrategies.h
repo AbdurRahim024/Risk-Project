@@ -46,6 +46,7 @@ public:
     HumanPlayerStrategy();
     HumanPlayerStrategy(Player* player, Map* map);
 
+
     //copy consturctor
     HumanPlayerStrategy(HumanPlayerStrategy &humanstrat);
 
@@ -56,7 +57,7 @@ public:
     HumanPlayerStrategy& operator=(const HumanPlayerStrategy &human);
 
     //destructor
-    //~HumanPlayerStrategy();
+    ~HumanPlayerStrategy();
 
     //methods
     vector<Order*> issueOrder();

@@ -145,7 +145,7 @@ void GameEngine::gameFlow(string userInput) {
 
     } else {
         // invalid move
-        cout << "Invalid move! Try again" << endl << endl;
+        cout << "Invalid move! Try again" << endl;
     }
 
     transitionLog = new string("New state: " + *intToStringState[*state] + "\n");

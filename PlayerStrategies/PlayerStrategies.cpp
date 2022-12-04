@@ -38,10 +38,17 @@ HumanPlayerStrategy::HumanPlayerStrategy(Player* player, Map* map){
     player->setPlayerStrategy(this);
     this->map = map;
 }
-//HumanPlayerStrategy::~HumanPlayerStrategy() {
-//
-//}
-
+//-------------------COPY CONSTRUCTOR--------------------
+HumanPlayerStrategy::HumanPlayerStrategy(HumanPlayerStrategy &humanstrat){
+    this->setPlayer(humanstrat.getPlayer());
+    this->map = humanstrat.map;
+};
+//---------------------DESTRUCTORS-----------------------
+HumanPlayerStrategy::~HumanPlayerStrategy() {
+    delete map;
+    map = nullptr;
+}
+//---------------------HUMAN PLAYER METHODS-------------------------
 vector<Order*> HumanPlayerStrategy::issueOrder() {
     vector<Order*> humanOrders;
     vector<int> localTroops;
