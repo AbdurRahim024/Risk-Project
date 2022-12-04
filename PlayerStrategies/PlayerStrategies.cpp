@@ -2,13 +2,55 @@
 #include <iostream>
 using namespace std;
 
-//class LogObserver;
-//LogObserver* Command::obs = NULL;
-//LogObserver* CommandProcessor ::obs = NULL;
-
 //----------------OVERLOADING INSERTION STREAM OPERATORS------------------
+ostream &operator << (ostream &output, PlayerStrategy &obj){
+    output << "Player strategy is being utilized." << endl;
+    return output;
+};
+ostream &operator<<(ostream &out, const HumanPlayerStrategy &human){
+    out << "Human Player Strategy is being utilized." << endl;
+    return out;
+};
+ostream &operator<<(ostream &out, const AggressivePlayerStrategy &aggressive){
+    out << "Aggressive Player Strategy is being utilized." << endl;
+    return out;
+};
+ostream &operator<<(ostream &out, const BenevolentPlayerStrategy &benevolent){
+    out << "Benevolent Player Strategy is being utilized." << endl;
+    return out;
+};
+ostream &operator<<(ostream &out, const NeutralPlayerStrategy &neutral){
+    out << "Neutral Player Strategy is being utilized." << endl;
+    return out;
+};
+ostream &operator<<(ostream &out, const CheaterPlayerStrategy &cheater){
+    out << "Cheater Player Strategy is being utilized." << endl;
+    return out;
+};
 
 
+//===================PLAYER STRATEGY===========================
+//-----------OVERLOADING ASSIGNMENT OPERATORS---------
+PlayerStrategy&PlayerStrategy::operator=(const PlayerStrategy &player){
+        this->p = player.p;
+};
+//---------------------CONSTRUCTORS--------------------
+PlayerStrategy::PlayerStrategy() {
+
+}
+PlayerStrategy::PlayerStrategy(Player *player) {
+    this->setPlayer(player);
+}
+//-------------------COPY CONSTRUCTOR--------------------
+PlayerStrategy::PlayerStrategy(PlayerStrategy &playerstrat){
+    this->p = playerstrat.p;
+};
+//---------------------DESTRUCTORS-----------------------
+PlayerStrategy::~PlayerStrategy() {
+    delete p;
+    p = nullptr;
+}
+//---------------------PLAYER METHODS-------------------------
 Player *PlayerStrategy::getPlayer() {
     return this->p;
 }
@@ -17,19 +59,14 @@ void PlayerStrategy::setPlayer(Player *player) {
     this->p = player;
 }
 
-PlayerStrategy::PlayerStrategy() {
 
-}
-PlayerStrategy::PlayerStrategy(Player *player) {
-    this->setPlayer(player);
-}
+//======================HUMAN STRATEGY =================================
+//-----------OVERLOADING ASSIGNMENT OPERATORS---------
+HumanPlayerStrategy &HumanPlayerStrategy::operator=(const HumanPlayerStrategy &human){
+    this->map = human.map;
+};
 
-PlayerStrategy::~PlayerStrategy() {
-
-}
-
-
-//HUMAN
+//---------------------CONSTRUCTORS--------------------
 HumanPlayerStrategy::HumanPlayerStrategy(){
 
 }
@@ -299,7 +336,13 @@ Territory* HumanPlayerStrategy::toDefend() {
 }
 
 
-//AGGRESSIVE
+//======================AGGRESSIVE STRATEGY ======================
+//---------------OVERLOADING ASSIGNMENT OPERATOR------
+AggressivePlayerStrategy &AggressivePlayerStrategy::operator=(const AggressivePlayerStrategy &aggressive){
+
+};
+
+//---------------------CONSTRUCTORS-------------------
 AggressivePlayerStrategy::AggressivePlayerStrategy() {
 
 }
@@ -308,10 +351,16 @@ AggressivePlayerStrategy::AggressivePlayerStrategy(Player *player) {
     player->setPlayerStrategy(this);
 }
 
-AggressivePlayerStrategy::~AggressivePlayerStrategy() {
+//----------------------COPY CONSTRUCTOR----------------------
+AggressivePlayerStrategy::AggressivePlayerStrategy(AggressivePlayerStrategy &aggressivestrat){
 
+};
+
+//-----------------------DESTRUCTOR---------------------------
+AggressivePlayerStrategy::~AggressivePlayerStrategy() {
 }
 
+//------------------AGGRESSIVE PLAYER METHODS-----------------
 vector<Order*> AggressivePlayerStrategy::issueOrder() {
     vector<Order*> aggressiveOrders;
     Territory* strongestOwnedTerritory = toDefend();
@@ -327,9 +376,9 @@ vector<Order*> AggressivePlayerStrategy::issueOrder() {
     //check if we have any aggressive cards (bomb)
     for (int i = 0; i < this->getPlayer()->getHand()->getCards().size(); ++i) {
         if(*this->getPlayer()->getHand()->getCards()[i]->getCardName() == "BOMB"){
-            Order* bomb = new Bomb(&weakestTerritoryName,this->getPlayer());
+            Order* bomb = new Bomb(weakestTerritoryName,this->getPlayer());
             aggressiveOrders.push_back(bomb);
-            cout<<"Player: "<<*this->getPlayer()->getName()<<" has ordered to BOMB "<<weakestTerritoryName<<" which only had "<<
+            cout<<"Player: "<<*this->getPlayer()->getName()<<" has ordered to BOMB "<<*weakestTerritoryName<<" which only had "<<
                 weakestTargetTerritory->getNoOfArmies()<<" troops"<<endl;
         }
     }
@@ -337,7 +386,7 @@ vector<Order*> AggressivePlayerStrategy::issueOrder() {
     int* strongestNoOfArmiesPtr = new int(strongestNoOfArmies);
     Order* advance = new Advance(strongestNoOfArmiesPtr,weakestTerritoryName,strongestTerritoryName,this->getPlayer());
     aggressiveOrders.push_back(advance);
-    cout<<"Player: "<<*this->getPlayer()->getName()<<" has ordered to ADVANCE "<<strongestNoOfArmies<<" onto "<<weakestTerritoryName<<" which only had "<<
+    cout<<"Player: "<<*this->getPlayer()->getName()<<" has ordered to ADVANCE "<<strongestNoOfArmies<<" onto "<<*weakestTerritoryName<<" which only had "<<
         weakestTargetTerritory->getNoOfArmies()<<" troops"<<endl;
     return aggressiveOrders;
 }
@@ -381,7 +430,13 @@ Territory* AggressivePlayerStrategy::toDefend() {
     return strongestOwned;
 }
 
-//BENEVOLENT
+//=====================BENEVOLENT STRATEGY=====================
+//---------------OVERLOADING ASSIGNMENT OPERATOR------
+BenevolentPlayerStrategy &BenevolentPlayerStrategy::operator=(const BenevolentPlayerStrategy &benevolent){
+
+};
+
+//---------------------CONSTRUCTORS-------------------
 BenevolentPlayerStrategy::BenevolentPlayerStrategy() {
 
 }
@@ -390,16 +445,21 @@ BenevolentPlayerStrategy::BenevolentPlayerStrategy(Player *player) {
     this->setPlayer(player);
     player->setPlayerStrategy(this);
 }
+//----------------------COPY CONSTRUCTOR----------------------
+BenevolentPlayerStrategy::BenevolentPlayerStrategy(BenevolentPlayerStrategy & benevolentstrat){
 
+};
+//-----------------------DESTRUCTOR---------------------------
 BenevolentPlayerStrategy::~BenevolentPlayerStrategy() {
 
 }
+//------------------BENEVOLENT PLAYER METHODS-----------------
 vector<Order*> BenevolentPlayerStrategy::issueOrder() {
     vector<Order*> benevolentOrders;
     Territory* t = toDefend();
-    string territoryName = t->getTerritoryName();
-    int noOfReinforcements = *this->getPlayer()->getReinforcements();
-    Order* benevolentDeploy = new Deploy(&noOfReinforcements, &territoryName, this->getPlayer());
+    string* territoryName = new string (t->getTerritoryName());
+    int* noOfReinforcements = new int(*this->getPlayer()->getReinforcements());
+    Order* benevolentDeploy = new Deploy(noOfReinforcements, territoryName, this->getPlayer());
     benevolentOrders.push_back(benevolentDeploy);
     cout<<"Player: "<<*this->getPlayer()->getName()<<" has ordered to DEPLOY "<<*noOfReinforcements<<" onto "<<*territoryName<<" which only had "<<t->getNoOfArmies()<<" troops"<<endl;
     //this->getPlayer()->setReinforcements(0);
@@ -427,7 +487,12 @@ Territory* BenevolentPlayerStrategy::toDefend() {
     return weakestOwned;
 }
 
-//NEUTRAL
+//=====================NEUTRAL STRATEGY=====================
+//---------------OVERLOADING ASSIGNMENT OPERATOR------
+NeutralPlayerStrategy &NeutralPlayerStrategy::operator=(const NeutralPlayerStrategy &neutral){
+    this->noOfTerritories = neutral.noOfTerritories;
+};
+//---------------------CONSTRUCTORS-------------------
 NeutralPlayerStrategy::NeutralPlayerStrategy() {
     this->noOfTerritories = new int(0);
 }
@@ -437,11 +502,17 @@ NeutralPlayerStrategy::NeutralPlayerStrategy(Player *player) {
     player->setPlayerStrategy(this);
     this->noOfTerritories = new int(player->getTerritories().size());
 }
+//----------------------COPY CONSTRUCTOR----------------------
+NeutralPlayerStrategy::NeutralPlayerStrategy(NeutralPlayerStrategy &neutralstrat){
+    this->noOfTerritories = neutralstrat.noOfTerritories;
+};
 
+//-----------------------DESTRUCTOR---------------------------
 NeutralPlayerStrategy::~NeutralPlayerStrategy() {
-
+    delete noOfTerritories;
+    noOfTerritories = nullptr;
 }
-
+//------------------NEUTRAL PLAYER METHODS-----------------
 vector<Order*> NeutralPlayerStrategy::issueOrder() {
     //NEUTRAL
     vector<Order*> order;
@@ -464,7 +535,11 @@ Territory* NeutralPlayerStrategy::toDefend() {
     return nullptr;
 }
 
-//Cheater
+//=====================CHEATER STRATEGY=====================
+//---------------OVERLOADING ASSIGNMENT OPERATOR------
+CheaterPlayerStrategy &CheaterPlayerStrategy::operator=(const CheaterPlayerStrategy &cheater){
+};
+//---------------------CONSTRUCTORS-------------------
 CheaterPlayerStrategy::CheaterPlayerStrategy() {
 
 }
@@ -473,11 +548,14 @@ CheaterPlayerStrategy::CheaterPlayerStrategy(Player *player) {
     this->setPlayer(player);
     player->setPlayerStrategy(this);
 }
-
+//----------------------COPY CONSTRUCTOR----------------------
+CheaterPlayerStrategy::CheaterPlayerStrategy(CheaterPlayerStrategy &cheater){
+};
+//-----------------------DESTRUCTOR---------------------------
 CheaterPlayerStrategy::~CheaterPlayerStrategy() {
 
 }
-
+//------------------NEUTRAL PLAYER METHODS-----------------
 vector<Order*> CheaterPlayerStrategy::issueOrder() {
 //call toAttack to conquer all adjacent territories -> num of armies becomes his (ownership changes)
 //cheater will go before anyone else in the orders

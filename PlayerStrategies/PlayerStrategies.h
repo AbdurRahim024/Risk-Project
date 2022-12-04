@@ -11,7 +11,6 @@ class Territory;
 class PlayerStrategy {
 private:
     Player* p;
-    static LogObserver* obs;
 public:
     //constructors
     PlayerStrategy();
@@ -39,7 +38,6 @@ public:
 
 class HumanPlayerStrategy: public PlayerStrategy {
 private:
-    static LogObserver* obs;
     Map* map;
 public:
     //constructors
@@ -47,7 +45,7 @@ public:
     HumanPlayerStrategy(Player* player, Map* map);
 
 
-    //copy consturctor
+    //copy constructor
     HumanPlayerStrategy(HumanPlayerStrategy &humanstrat);
 
     //stream insertion operator
@@ -68,7 +66,7 @@ public:
 
 class AggressivePlayerStrategy: public PlayerStrategy{
 private:
-    static LogObserver* obs;
+
 public:
     //constructors
     AggressivePlayerStrategy();
@@ -94,14 +92,14 @@ public:
 
 class BenevolentPlayerStrategy: public PlayerStrategy{
 private:
-    static LogObserver* obs;
+
 public:
     //constructors
     BenevolentPlayerStrategy();
     BenevolentPlayerStrategy(Player* player);
 
     //copy constructor
-    BenevolentPlayerStrategy(BenevolentPlayerStrategy & bevolentstrat);
+    BenevolentPlayerStrategy(BenevolentPlayerStrategy & benevolentstrat);
 
     //stream insertion operator
     friend ostream &operator<<(ostream &out, const BenevolentPlayerStrategy &benevolent);
@@ -120,7 +118,6 @@ public:
 
 class NeutralPlayerStrategy: public PlayerStrategy {
 private:
-    static LogObserver* obs;
     const int* noOfTerritories;
 public:
     //constructors
@@ -147,7 +144,6 @@ public:
 
 class CheaterPlayerStrategy: public PlayerStrategy{
 private:
-    static LogObserver* obs;
 public:
     //constructors
     CheaterPlayerStrategy();
